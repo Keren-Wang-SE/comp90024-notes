@@ -77,7 +77,7 @@
       - Virtual image factories
     - Public(credit card and pay for using) /Private(Unimelb research cloud)/Hybrid(MRC run out of resource nad buy from Amazon)/Mobile/Health Clouds
     - complexity arise in: decision about what can we move out/what cost ot stay in/who is  allowed this to happen
-3. 云计算的类型（Flavour）
+3. **云计算的类型（Flavour）**
 
 - **计算型云（Compute Clouds）**
   - Amazon 弹性计算云（Amazon Elastic Compute Cloud）
@@ -134,7 +134,46 @@
             - Virtual organization support
             - Security
                 - Public key infrastructure
-    
+**4. 历史演变 —— 计算趋势（History - Trends in Computing）**
+
+- **1. 计算与通信技术的演进（Computing and Communication Technologies (r)evolution）**
+  - 从集中式计算转向去中心化分布式计算
+
+- **2. 分布式系统的发展历史（Distributed System History）**
+  - 很久以前，我们有统一的标准  
+  - 然后，标准越来越多  
+  - 90年代中期：重点是计算机之间的交互  
+  - 互联网时代：点对点（peer-to-peer）通信  
+    - 挑战：不同组织之间的数据共享  
+    - 解决方案：网格计算（Grid Computing）  
+    - 网格：无论是访问数据还是超级计算，只需能访问即可，重在处理资源迁移  
+      - 问题：不同的人使用不同的方法来实现
+
+- **3. 分布式系统的特征与挑战（Distributed System）**
+  - **透明性（Transparency）** 和 **异构性（Heterogeneity）** 是计算机之间交互的关键  
+  - 资源发现 -> 资源绑定 -> 运行时类型检查 -> 资源调用  
+  - 应对系统异构性的挑战包括：  
+    - 实现的复杂性  
+    - 厂商特有的解决方案  
+    - 可扩展性问题  
+    - 不同组织间的数据共享  
+
+- **4. 网格计算（Grid Computing）**
+  - 从“计算机对计算机”的焦点转向“组织对组织”的焦点  
+  - 可以视为一种处理非交互式工作负载的分布式系统  
+  - 与传统超级计算不同，超级计算机通过高速总线连接多个处理器，而网格计算通过以太网连接各节点  
+  - 网格计算与传统高性能计算（如集群计算）的区别在于：  
+    - 每个节点通常执行不同的任务或应用  
+    - 更加异构且地理位置分散（物理上不耦合）  
+  - 单一网格可以专用于某个应用，但通常用于多种用途  
+  - 通常使用通用网格中间件构建，网格规模可以非常大  
+  - 网格计算的挑战包括：  
+    - 资源可用性的确认  
+    - 判断资源当前状态  
+    - 作业调度  
+    - 虚拟组织支持  
+    - 安全性保障（如公钥基础设施）
+
 5. Comparison between Grid/Cluster/Cloud Computing
     ```
     Clusters "tend" to be tightly coupled, e.g. a bunch of servers in a rack with high speed interconnects - we'll go into some details of this in week 3;  
@@ -150,6 +189,20 @@
     - Cloud Computing
         - Refer to week 5
         - Cloud computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources(networks, servers, storage, applications, services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.
+**5. 网格 / 集群 / 云计算对比（Comparison between Grid/Cluster/Cloud Computing）**
+
+- **网格计算（Grid Computing）**
+  - 详见上方内容
+
+- **集群计算（Cluster Computing）**
+  - 集群系统通常是紧耦合的，例如：一排机架中放置多台服务器，并通过高速互连进行连接  
+  - 示例：超级计算机
+
+- **云计算（Cloud Computing）**
+  - 详见第5周内容  
+  - 云计算是一种模型，用于实现对可配置计算资源（网络、服务器、存储、应用和服务）共享池的无处不在、方便、按需的网络访问。  
+  - 这些资源可以迅速配置和释放，且对管理者或服务提供者的交互需求最小化。
+
 
 ### past exam
 - > [2013 Q1] A) Explain what is meant by the terms:
