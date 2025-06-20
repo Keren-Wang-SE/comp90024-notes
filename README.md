@@ -346,7 +346,45 @@
     - volume of data on network grows each year
 3. massive amount of data generated among a time requires compute infrasture
     - e.g. mapping the sky with data from tele-scope
-5. Cloud Computing in Different Domains
+1. 计算扩展（Compute Scaling）
+- 方法：
+    1. 垂直计算扩展（Vertical Computational Scaling）  
+        - 使用更快的处理器  
+        - 缺点：处理器速度存在极限  
+          - 摩尔定律已逐渐失效，CPU 不再像预期那样不断加速  
+    2. 水平计算扩展（Horizontal Computational Scaling）  
+        - 使用更多的处理器  
+        - 优点：  
+            - 1）易于**增加更多**（更多核心或节点集群）  
+                - 增加更多 =  
+                    - 单台机器，多核心  
+                        - 当今典型的笔记本/台式机/服务器  
+                    - 松散耦合的机器集合/集群  
+                        - 资源轮询/共享  
+                        - 专用资源 vs 在空闲时才可用的资源  
+                    - 紧耦合的机器集群  
+                        - 典型的高性能/高通量计算环境（如 SPARTAN）  
+                        - 多台服务器在同一机房中，常通过快速消息传递互连  
+                    - 分布广泛的机器集群  
+                        - 例如 UK NGS、EGEE  
+                    - 上述多种形式的混合组合  
+                        - 会引发很多分布式系统的挑战  
+                        - 共享状态  
+                        - 消息传递中的延迟与丢失  
+            - 2）成本增长不明显  
+        - 缺点：  
+            - 1）**增加更多**存在限制（见第3周内容：阿姆达尔定律）  
+            - 2）更难设计、开发、测试  
+
+2. 网络扩展（Network Scaling）
+- 网络上的数据量每年都在增长  
+
+3. 短时间内产生大量数据需要计算基础设施支撑
+- 例如：通过望远镜绘制星空图，需要处理大量数据
+
+
+
+4. Cloud Computing in Different Domains
     - **High energy physics**
     - Astrophysics
     - **Macro-micro simulations**
@@ -392,12 +430,73 @@
         - Stringent security requirements
             - Commercial IP
             - Expensive software licenses
+4. 云计算在不同领域中的应用（Cloud Computing in Different Domains）
+
+- 高能物理（High energy physics）  
+- 天体物理学（Astrophysics）  
+- 宏观-微观模拟（Macro-micro simulations）  
+- 电子工程（Electronics）  
+- 人文与艺术（Arts and humanities）  
+- 生命科学（Life sciences）  
+    - 拥有庞大的研究群体  
+        - 例如 Parkville Precinct（墨尔本大学医学园区）  
+    - 众多群体对其高度关注  
+        - 涉及健康、食品、环境——是真正的跨学科领域！  
+    - 几乎与所有学科都有交集  
+        - 物理、化学、数学/统计、纳米工程……  
+    - 与生物信息学相关的数据库成千上万，且持续增长  
+        - 异构性、相互依赖性、复杂性、变化性……  
+    - 一些重大科学问题/挑战：  
+        - 细胞是如何工作的？  
+        - 大脑是如何运作的？  
+        - 生物体是如何发育的？  
+        - 为什么吃得少的人更长寿？  
+- 社会科学（Social sciences）  
+    - 例如：AURIN（澳大利亚城市研究基础设施网络）  
+- 临床科学（Clinical sciences）  
+- 数据共享与伦理问题（Data sharing and ethics）  
+- 电子健康（e-Health）  
+    - 安全性（Security）  
+- 环境科学（Environmental）  
+- 社会领域（Social）  
+- 地理信息（Geographical）  
+- 基因组研究（Genome）  
+- 层级统计系统模拟（Hierarchical statistical system simulations）  
+    - 超大规模器件与电路模拟  
+        - 3D器件模拟  
+        - 包含 10^5 个电路元件  
+    - 大量统计样本  
+        - 1000 - 100000 次 3D 模拟  
+        - 4D 模拟中有 1000 - 100000 个电路样本  
+    - 数据流动与存储复杂  
+        - 每个模拟生成许多文件  
+        - 元数据捕获与数据溯源  
+    - 5个合作伙伴间的协作  
+        - 跨学科背景  
+        - 数据交换复杂  
+    - 严格的安全要求  
+        - 商业知识产权  
+        - 昂贵的软件授权
+
+
 
 5. challenges are shaping the technological landscape
     - Challenges happen in multiple perspectives in research domains. - Big data - Big compute - Big distribution - Big collaboration - Big security
     - Tools, technologies and methodologies have been/can/are evolving to tackle these challenges
         - That there is a huge amount of work still to be done 
         - Domain knowledge is also required
+5. 挑战正在塑造技术发展格局（Challenges Are Shaping the Technological Landscape）
+
+- 在多个研究领域中面临挑战  
+    - 大数据  
+    - 大计算  
+    - 大规模分布  
+    - 大协作  
+    - 大安全性  
+
+- 各种工具、技术与方法正在不断发展以应对这些挑战  
+    - 仍有大量工作尚未完成  
+    - 同时也需要领域知识的支持  
 
 ## Week3 - Overview of Distributed and Parallel Computing Systems
 1. Question: If n processors (cores) are thrown at a problem how much faster will it go?
