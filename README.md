@@ -1,7 +1,7 @@
 # COMP90024-CCC
 
 ## Week1 - How we got here
-1. What is cloud computing?
+**1. What is cloud computing?**
     - In 2013, Cloud computing is a jargon term without a commonly accepted non-ambiguous scientific or technical definition. (Anything that is not on your computer, e.g.: gmail)
     - Cloud computing is a jargon term without a commonly accepted nonambiguous scientific or technical definition. In science, cloudcomputing is a synonym for distributed computing over a network and means the ability to run a program on many connected computers at the same time.
     - In 2016, Proponents claim that cloud computing allows companies to avoid upfront infrastructure costs, and focus on projects that differentiate their businesses instead of on infrastructure. Proponents also claim that cloud computing allows enterprises to get their applications up and running faster, with improved manageability and less maintenance, and enables IT to more rapidly adjust resources to meet fluctuating and unpredictable business demand. Cloud providers typically use a "pay as you go" model. This can lead to unexpectedly high charges if administrators do not adapt to the cloud pricing model. (Everyone has different flavor)
@@ -9,7 +9,7 @@
    -   云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。在科学领域，云计算是“分布式计算”的同义词，指的是能够在许多连接的计算机上同时运行一个程序的能力。
    - 到了2016年，支持者声称，云计算可以让公司避免前期的基础设施投入成本，将精力集中在使其业务差异化的项目上，而不是基础设施本身。支持者还声称，云计算能让企业更快地上线应用程序，提升可管理性，减少维护工作，使信息技术部门能更快速地调整资源，以应对不断变化和不可预测的业务需求。云服务提供商通常采用“按需付费”模式。如果管理员没有根据云的定价模型进行调整，这可能会导致意外的高额费用。（每个人对云计算的理解都有所不同）
   
-2. Cloud Characteristics (Lecture notes and then my paraphrasing)
+**2. Cloud Characteristics (Lecture notes and then my paraphrasing)**
     - On-demand self-service
         - A consumer can provision computing capabilities as needed without requiring human   interaction with each service provider. 
         - Scale computing resources up and down by needs without requiring human interaction with each service provider.
@@ -63,7 +63,7 @@
         - 云系统通过在适当抽象层面上的计量功能，自动控制和优化资源使用。
 
         - 通过衡量使用量来优化资源分配，例如使用 Nginx 等工具监控负载平衡。
-3. Flavour
+**3. Flavour**
     - Compute clouds
       - Amazon Elastic compute cloud
       - Azure
