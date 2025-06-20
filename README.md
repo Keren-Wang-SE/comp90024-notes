@@ -77,34 +77,29 @@
       - Virtual image factories
     - Public(credit card and pay for using) /Private(Unimelb research cloud)/Hybrid(MRC run out of resource nad buy from Amazon)/Mobile/Health Clouds
     - complexity arise in: decision about what can we move out/what cost ot stay in/who is  allowed this to happen
-## 3. 云计算的类型（Flavour）
+3. 云计算的类型（Flavour）
 
 - **计算型云（Compute Clouds）**
   - Amazon 弹性计算云（Amazon Elastic Compute Cloud）
   - Azure（微软云）
-
 - **数据型云（Data Clouds）**
   - Amazon 简单存储服务（Amazon Simple Storage Service）
   - Google 文档（Google Docs）
   - iCloud（苹果云服务）
   - Dropbox（云文件存储服务）
-
 - **应用型云（Application Clouds）**
   - App Store（应用商店）
   - 虚拟镜像工厂（Virtual Image Factories）
-
 - **云部署模式**
   - 公有云（Public）：刷信用卡按使用量付费的云服务
   - 私有云（Private）：如墨尔本大学的研究云（Unimelb Research Cloud）
   - 混合云（Hybrid）：例如 MRC 资源耗尽时，从 Amazon 购买补充资源
   - 移动云（Mobile Cloud）
   - 健康云（Health Cloud）
-
 - **复杂性来源于：**
   - 决策——我们能将哪些服务迁移到云上？
   - 成本——保留在本地的成本是多少？
   - 权限——谁被允许让这些事情发生？
-    - 
 4. History - tends in computing
     1. Computing and Communication Technologies (r)evolution
         - from centralised to decentralised
