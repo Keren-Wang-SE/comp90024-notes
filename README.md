@@ -1,15 +1,17 @@
 # COMP90024-CCC
 
 ## Week1 - How we got here
-**1. What is cloud computing?**
+- 1. What is cloud computing?
     - In 2013, Cloud computing is a jargon term without a commonly accepted non-ambiguous scientific or technical definition. (Anything that is not on your computer, e.g.: gmail)
     - Cloud computing is a jargon term without a commonly accepted nonambiguous scientific or technical definition. In science, cloudcomputing is a synonym for distributed computing over a network and means the ability to run a program on many connected computers at the same time.
     - In 2016, Proponents claim that cloud computing allows companies to avoid upfront infrastructure costs, and focus on projects that differentiate their businesses instead of on infrastructure. Proponents also claim that cloud computing allows enterprises to get their applications up and running faster, with improved manageability and less maintenance, and enables IT to more rapidly adjust resources to meet fluctuating and unpredictable business demand. Cloud providers typically use a "pay as you go" model. This can lead to unexpectedly high charges if administrators do not adapt to the cloud pricing model. (Everyone has different flavor)
     - 在2013年，云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。（泛指所有不在你电脑上的东西，例如：Gmail）
-   -   云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。在科学领域，云计算是“分布式计算”的同义词，指的是能够在许多连接的计算机上同时运行一个程序的能力。
-   - 到了2016年，支持者声称，云计算可以让公司避免前期的基础设施投入成本，将精力集中在使其业务差异化的项目上，而不是基础设施本身。支持者还声称，云计算能让企业更快地上线应用程序，提升可管理性，减少维护工作，使信息技术部门能更快速地调整资源，以应对不断变化和不可预测的业务需求。云服务提供商通常采用“按需付费”模式。如果管理员没有根据云的定价模型进行调整，这可能会导致意外的高额费用。（每个人对云计算的理解都有所不同）
+    -   云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。在科学领域，云计算是“分布式计算”的同义词，指的是能够在许多连接的计算机上同时运行一个程序的能力。
+    - 到了2016年，支持者声称，云计算可以让公司避免前期的基础设施投入成本，将精力集中在使其业务差异化的项目上，而不是基础设施本身。支持者还声称，云计算能让企业更快地上线应用程序，提升可管理性，减少维护工作，使信息技术部门能更快速地调整资源，以应对不断变化和不可预测的业务需求。云服务提供商通常采用“按需付费”模式。如果管理员没有根据云的定价模型进行调整，这可能会导致意外的高额费用。（每个人对云计算的理解都有所不同）
   
-**2. Cloud Characteristics (Lecture notes and then my paraphrasing)**
+
+
+- 2. Cloud Characteristics (Lecture notes and then my paraphrasing)
     - On-demand self-service
         - A consumer can provision computing capabilities as needed without requiring human   interaction with each service provider. 
         - Scale computing resources up and down by needs without requiring human interaction with each service provider.
@@ -29,41 +31,28 @@
         - Resourcing optimization by measuring usage
         - monitor for load balance (e.g.: nigix)
     云计算的特征（讲义内容及个人释义）：
-
     - 按需自助服务（On-demand self-service）
-
         - 用户可以根据需要自行配置计算能力，无需与每个服务提供商人工交互。
-
         - 可以根据需求随时扩大或缩小计算资源规模，无需人工干预。
-
         - 任何人在任何时间都可以访问——无限可用性（关键点）。
-
     - 网络访问（Networked access）
-
         - 各种能力可通过网络访问，并通过标准机制，使得不同类型的平台都能使用这些资源。
-
         - 资源可通过网络访问，并适配不同类型的客户端平台。
-
     - 资源池化（Resource pooling）
-
         - 服务提供者将计算资源集中在一个资源池中，以多租户模型服务于多个用户，这些资源可能是物理的，也可能是虚拟的，并能根据用户需求动态分配与重新分配。
-
         - 提供者的资源被池化，可根据需求动态分配与重新分配。
-
         - 资源充足，可随时扩大或缩减规模。
 
     - 快速弹性（Rapid Elasticity）
-
         - 各种能力可弹性地进行配置和释放，在某些情况下甚至可以自动执行，以便在有需求时快速扩展。
-
         - 各项服务能力可以根据需求快速、轻松地进行扩展。
-
     - 可计量服务（Measured Service）
-
         - 云系统通过在适当抽象层面上的计量功能，自动控制和优化资源使用。
-
         - 通过衡量使用量来优化资源分配，例如使用 Nginx 等工具监控负载平衡。
-**3. Flavour**
+
+
+
+- 3. Flavour
     - Compute clouds
       - Amazon Elastic compute cloud
       - Azure
@@ -77,29 +66,31 @@
       - Virtual image factories
     - Public(credit card and pay for using) /Private(Unimelb research cloud)/Hybrid(MRC run out of resource nad buy from Amazon)/Mobile/Health Clouds
     - complexity arise in: decision about what can we move out/what cost ot stay in/who is  allowed this to happen
-3. **云计算的类型（Flavour）**
+- 3. 云计算的类型（Flavour）
+  - 计算型云（Compute Clouds）
+    - Amazon 弹性计算云（Amazon Elastic Compute Cloud）
+    - Azure（微软云）
+  - 数据型云（Data Clouds）
+    - Amazon 简单存储服务（Amazon Simple Storage Service）
+    - Google 文档（Google Docs）
+    - iCloud（苹果云服务）
+    - Dropbox（云文件存储服务）
+  - 应用型云（Application Clouds）
+    - App Store（应用商店）
+    - 虚拟镜像工厂（Virtual Image Factories）
+  - 云部署模式
+    - 公有云（Public）：刷信用卡按使用量付费的云服务
+    - 私有云（Private）：如墨尔本大学的研究云（Unimelb Research Cloud）
+    - 混合云（Hybrid）：例如 MRC 资源耗尽时，从 Amazon 购买补充资源
+    - 移动云（Mobile Cloud）
+    - 健康云（Health Cloud）
+  - 复杂性来源于：
+    - 决策——我们能将哪些服务迁移到云上？
+    - 成本——保留在本地的成本是多少？
+    - 权限——谁被允许让这些事情发生？
 
-- **计算型云（Compute Clouds）**
-  - Amazon 弹性计算云（Amazon Elastic Compute Cloud）
-  - Azure（微软云）
-- **数据型云（Data Clouds）**
-  - Amazon 简单存储服务（Amazon Simple Storage Service）
-  - Google 文档（Google Docs）
-  - iCloud（苹果云服务）
-  - Dropbox（云文件存储服务）
-- **应用型云（Application Clouds）**
-  - App Store（应用商店）
-  - 虚拟镜像工厂（Virtual Image Factories）
-- **云部署模式**
-  - 公有云（Public）：刷信用卡按使用量付费的云服务
-  - 私有云（Private）：如墨尔本大学的研究云（Unimelb Research Cloud）
-  - 混合云（Hybrid）：例如 MRC 资源耗尽时，从 Amazon 购买补充资源
-  - 移动云（Mobile Cloud）
-  - 健康云（Health Cloud）
-- **复杂性来源于：**
-  - 决策——我们能将哪些服务迁移到云上？
-  - 成本——保留在本地的成本是多少？
-  - 权限——谁被允许让这些事情发生？
+
+
 4. History - tends in computing
     1. Computing and Communication Technologies (r)evolution
         - from centralised to decentralised
@@ -134,12 +125,12 @@
             - Virtual organization support
             - Security
                 - Public key infrastructure
-**4. 历史演变 —— 计算趋势（History - Trends in Computing）**
+- 4. 历史演变 —— 计算趋势（History - Trends in Computing）
 
-- **1. 计算与通信技术的演进（Computing and Communication Technologies (r)evolution）**
+- 1. 计算与通信技术的演进（Computing and Communication Technologies (r)evolution）
   - 从集中式计算转向去中心化分布式计算
 
-- **2. 分布式系统的发展历史（Distributed System History）**
+- 2. 分布式系统的发展历史（Distributed System History）
   - 很久以前，我们有统一的标准  
   - 然后，标准越来越多  
   - 90年代中期：重点是计算机之间的交互  
@@ -149,7 +140,7 @@
     - 网格：无论是访问数据还是超级计算，只需能访问即可，重在处理资源迁移  
       - 问题：不同的人使用不同的方法来实现
 
-- **3. 分布式系统的特征与挑战（Distributed System）**
+- 3. 分布式系统的特征与挑战（Distributed System）
   - **透明性（Transparency）** 和 **异构性（Heterogeneity）** 是计算机之间交互的关键  
   - 资源发现 -> 资源绑定 -> 运行时类型检查 -> 资源调用  
   - 应对系统异构性的挑战包括：  
@@ -158,7 +149,7 @@
     - 可扩展性问题  
     - 不同组织间的数据共享  
 
-- **4. 网格计算（Grid Computing）**
+- 4. 网格计算（Grid Computing）
   - 从“计算机对计算机”的焦点转向“组织对组织”的焦点  
   - 可以视为一种处理非交互式工作负载的分布式系统  
   - 与传统超级计算不同，超级计算机通过高速总线连接多个处理器，而网格计算通过以太网连接各节点  
@@ -174,7 +165,9 @@
     - 虚拟组织支持  
     - 安全性保障（如公钥基础设施）
 
-5. Comparison between Grid/Cluster/Cloud Computing
+
+
+- 5. Comparison between Grid/Cluster/Cloud Computing
     ```
     Clusters "tend" to be tightly coupled, e.g. a bunch of servers in a rack with high speed interconnects - we'll go into some details of this in week 3;  
     Grid is/was more loosely coupled resources that provided single sign-on access to distributed resources that are often hosted by different organisations;  
@@ -189,16 +182,19 @@
     - Cloud Computing
         - Refer to week 5
         - Cloud computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources(networks, servers, storage, applications, services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.
-**5. 网格 / 集群 / 云计算对比（Comparison between Grid/Cluster/Cloud Computing）**
+- 5. 网格 / 集群 / 云计算对比（Comparison between Grid/Cluster/Cloud Computing）
+  - 集群“往往”是紧密耦合的，例如，机架中的一组服务器通过高速互连连接——我们将在第 3 周详细探讨这一点；
+  - 网格是/曾是较为松散耦合的资源，它为分布式资源提供单点登录访问，这些资源通常由不同的组织托管；
+  - 云 = 我们很快就会讲到！
 
-- **网格计算（Grid Computing）**
+- 网格计算（Grid Computing）
   - 详见上方内容
 
-- **集群计算（Cluster Computing）**
+- 集群计算（Cluster Computing）
   - 集群系统通常是紧耦合的，例如：一排机架中放置多台服务器，并通过高速互连进行连接  
   - 示例：超级计算机
 
-- **云计算（Cloud Computing）**
+- 云计算（Cloud Computing）
   - 详见第5周内容  
   - 云计算是一种模型，用于实现对可配置计算资源（网络、服务器、存储、应用和服务）共享池的无处不在、方便、按需的网络访问。  
   - 这些资源可以迅速配置和释放，且对管理者或服务提供者的交互需求最小化。
