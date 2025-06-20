@@ -627,42 +627,89 @@
     尽管总核数一样，但这两种方式的并行模型不同，程序需要对线程/进程的结构有明确的控制，这属于显式并行编程的设计选择。
 
 - OpenMP
-    - Work Sharing Constructs
-    | 指令                     | 功能说明                 |
-    | ---------------------- | -------------------- |
-    | `#pragma omp for`      | 将循环迭代分配给不同线程执行       |
-    | `#pragma omp sections` | 将不同代码段分配给不同线程        |
-    | `#pragma omp single`   | 指定某一段代码只能由**一个线程**执行 |
-    | `#pragma omp task`     | 动态创建任务，由线程调度执行       |
-    - Thread Management
-    | 函数名                     | 功能说明       |
-    | ----------------------- | ---------- |
-    | `omp_set_num_threads()` | 设置线程的数量    |
-    | `omp_get_num_threads()` | 获取当前的线程总数  |
-    | `omp_get_thread_num()`  | 获取当前线程的 ID |
-    - Synchronization Constructs
-    | 机制名                                   | 功能说明                          |
-    | ------------------------------------- | ----------------------------- |
-    | `#pragma omp critical`                | **临界区**，一次只能一个线程进入，防止数据冲突     |
-    | `#pragma omp atomic`                  | 原子操作，用于同步简单操作，性能优于 `critical` |
-    | `#pragma omp barrier`                 | **线程屏障**，所有线程在此同步等待           |
-    | `omp_set_lock()` / `omp_unset_lock()` | 设置/释放锁，用于更细粒度的互斥控制            |
+
+    - Work Sharing Constructs：
+
+        - #pragma omp for ：将循环迭代分配给不同线程执行
+
+        - #pragma omp sections ：将不同代码段分配给不同线程
+
+        - #pragma omp single ：指定某一段代码只能由一个线程执行
+
+        - #pragma omp task ：动态创建任务，由线程调度执行
+
+    - Thread Management：
+
+        - omp_set_num_threads() ：设置线程的数量
+
+        - omp_get_num_threads() ：获取当前的线程总数
+
+        - omp_get_thread_num() ：获取当前线程的 ID
+
+    - Synchronization Constructs：
+
+        - #pragma omp critical ：临界区，一次只能一个线程进入，防止数据冲突
+
+        - #pragma omp atomic ：原子操作，用于同步简单操作，性能优于 critical
+
+        - #pragma omp barrier ：线程屏障，所有线程在此同步等待
+
+        - omp_set_lock() / omp_unset_lock() ：设置/释放锁，用于更细粒度的互斥控制
+
     - Data Sharing Attributes
-    | 属性名            | 功能说明                                        |
-    | -------------- | ------------------------------------------- |
-    | `shared`       | 所有线程访问的是**同一份变量**                           |
-    | `private`      | 每个线程都有自己的变量副本                               |
-    | `firstprivate` | 每个线程有自己的变量副本，并由主线程进行初始化                     |
-    | `reduction`    | 各线程处理局部副本，最后将结果\*\*归约（合并）\*\*为一个值（如求和、最大值等） |
+
+        - shared ：所有线程访问的是同一份变量
+
+        - private ：每个线程都有自己的变量副本
+
+        - firstprivate ：每个线程有自己的变量副本，并由主线程进行初始化
+
+        - reduction ：各线程处理局部副本，最后将结果**归约（合并）**为一个值（如求和、最大值等）
+
     - Loop Scheduling
-    | 策略名       | 功能说明                |
-    | --------- | ------------------- |
-    | `static`  | 编译时预先确定每个线程负责哪些迭代   |
-    | `dynamic` | 运行时线程动态获取迭代任务       |
-    | `guided`  | 线程获取的迭代块数量逐渐减小，从大到小 |
-    | `auto`    | 交由编译器或运行时系统决定调度策略   |
+
+        - static ：编译时预先确定每个线程负责哪些迭代
+
+        - dynamic ：运行时线程动态获取迭代任务
+
+        - guided ：线程获取的迭代块数量逐渐减小，从大到小
+
+        - auto ：交由编译器或运行时系统决定调度策略
+
     - 可移植性与可扩展性（Portable and Scalable）
-        -OpenMP 被设计为可移植，支持多种硬件平台和操作系统，可用于多种编程语言：C、C++、Fortran、Python（通过扩展）等。
+
+        - OpenMP 被设计为可移植，支持多种硬件平台和操作系统，可用于多种编程语言：C、C++、Fortran、Python（通过扩展）等。
+
+- **MPI消息传递接口**
+
+    - 是在并行计算系统中进行消息传递（进程间通信）的广泛采用的方法。支持多种主流编程语言：Fortran、C、C++、Python、Java。
+
+    - 具备以下特点：
+
+        - 标准化（由 MPI Forum 维护标准）
+
+        - 广泛采用
+
+        - 可移植性强（可运行于不同平台和操作系统）
+
+        - 性能优良
+
+        - 然而，并行化的具体实现仍然是程序员的责任，需要手动处理通信逻辑。
+
+    - 核心函数：
+
+        - MPI_Init ：初始化 MPI 运行环境（程序开始时调用）
+
+        - MPI_Finalize ：结束 MPI 运行环境（程序结束前调用）
+
+        - MPI_COMM_SIZE ：获取通信器中总进程数
+
+        - MPI_COMM_RANK ：获取当前进程的唯一标识符（编号）
+
+        - MPI_SEND ：向其他进程发送消息
+
+        - MPI_RECV ：从其他进程接收消息
+
 
 
 
