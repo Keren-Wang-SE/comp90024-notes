@@ -758,10 +758,168 @@
             - Lustre
 
             - Ceph
+- 一些分布式系统错误假设：
+  - The network is reliable  
+    - 网络是可靠的  
+
+  - Latency is zero  
+    - 网络延迟为零  
+
+  - Bandwidth is infinite  
+    - 带宽是无限的  
+
+  - The network is secure  
+    - 网络是安全的  
+
+  - Topology doesn't change  
+    - 网络拓扑结构是固定不变的  
+
+  - There is one administrator  
+    - 系统中只有一个管理员  
+
+  - Transport cost is zero  
+    - 数据传输成本为零  
+
+  - The network is homogeneous  
+    - 网络环境是同质化的（所有设备、系统都是一致的）  
+
+  - Time is ubiquitous  
+    - 所有设备的时间是同步且一致的  
+- Network reliability（网络可靠性）
+
+  - 如果我通过网络发送一些数据：
+    - 它会到达（It will arrive）
+    - 它会按我发送的顺序到达（It will arrive in the order I sent it）
+    - 它不会被破坏（It will arrive uncorrupted）
+
+  - 如果网络不可靠，它通常只会以其中一种方式表现出来
+    - 并且是**一致地**以这种方式失败（Consistently）
+
+  - 网络协议栈中的底层会对这些问题提供一定的保护  
+    - （The lower layers in the networking stack protect me from these issues）
+
+  - **但上述每一条陈述都不总是成立！**
+    - None of these statements are always true!
+
+- Latency is zero（延迟为零）
+
+  - 如果我发送一些数据，它会立刻到达（It will arrive “now”）
+    - 或者说，快得可以认为是“现在” （So fast to be effectively “now”）
+
+  - 真的是这样吗？（Really…?）
+
+  - 举个例子：从墨尔本访问 Twitter（位于旧金山）
+    - 距离约为 12,600 公里（~12,600 km）
+  
+- Latency Consequences（延迟的后果）
+
+  - 在一条 1Gbps 的链路上：
+    - 大约有 9MB 的数据可能处于“飞行中”（尚未收到响应），具体取决于 TCP 的分包大小
+    - 在开始收到响应之前，可能已经发送了 18MB 的数据，这些数据都会被缓存在 TCP 协议栈的缓冲区中
+
+  - 实际上的网络延迟可能更高
+
+  - 在一个包含多个节点或跳数（hops）的系统中，每一条链路可能具有不同的延迟：
+    - 下一跳（next hop）的行为可能变得复杂和难以预测
+    - 这些问题在主动网络技术（Active Networking）和软件定义网络（SDN）中有研究与探索
+
+- Bandwidth is infinite（带宽是无限的）
+
+  - 我可以在任意节点之间传输任意数量的数据  
+    - I can send any amount of data I wish between any nodes
+
+  - 真的如此吗？（Really?）
+
+    - 想想大数据（BIG DATA）场景：
+      - 从 TB 到 PB 级别的数据（Tb → Pb+）
+      - 如：SKA（平方公里阵列射电望远镜）、LHC（大型强子对撞机）、基因组学（Genomics）……
+
+    - 这对其他用户也有影响，例如墨尔本的医院
+
+  - 网络带宽通常如下：
+    - 1GB、10GB、100GB……（指的是每秒带宽容量）
+    - 对于医院或家庭网络，带宽差异巨大
+
+  - 网络容量是经过**精确规划的**
+    - 例如：英国的 JANET 教育科研骨干网络，其带宽规划最多只利用了约 25% 的实际容量
+
+- Security
+
+  - 所以我不需要担心……？
+
+  - 有人向我的服务发送数据？
+    - 比如重复密码尝试、SQL 注入攻击等
+
+  - 有人主动攻击我？
+    - 分布式拒绝服务攻击（DDoS）
+
+  - 有人窃听我发送的数据？
+    - 中间人攻击（Man-in-the-middle）
+
+  - 有人冒充我的节点？
+    - 网络欺骗（Spoofing）
+
+  - 有人入侵我的节点？
+    - 木马、病毒、暴力破解等
+
+  - 有人直接偷走我的物理设备？
+
+- 节点 x 总是在那儿（Node x is always there）
+
+  - “在那儿”是什么意思？
+    - 延迟（Latency）
+    - IP 地址（IP）
+    - 路由路径（Route）
+    - 提供的服务（Services）
+
+  - 实际上，路由路径和延迟通常都无法保证一致
+
+    - 除非使用特定的路由协议，如差异化服务（DiffServ）或带有预约的协议
+    - 但这些在常规 TCP/IP 网络中通常是不可用的
+
+  - 又是“下一跳行为”（Next hop behaviour）的问题！
+
+- Only one admin
 
 
+  - 谁是墨尔本大学的管理员？
 
+    - 防火墙的更改？
+    - 服务器的重配置？
+    - 服务管理？
+    - 访问控制管理？（学生 / 教职工 / 其他）
 
+  - 组织之间的管理员权限如何协调？（Inter-organisational administrators）
+
+- Transport cost is zero
+
+  - 有些地方看起来似乎是免费的，但其实……
+
+    - 比如澳大利亚……？？？？
+
+    - 上传/下载有额度限制（capped）
+
+    - 墨尔本大学的研究人员因为未通过 AARNET 网络访问数据而被收取 $50,000 的账单
+
+    - 在 Amazon EC2/S3 上传/下载数据……价格 $$$$$
+
+  - 结论：传输**永远不是免费的**！
+
+- Time is ubiquitous（时间是统一的）
+
+  - 时钟本身存在差异：
+    - 时钟频率、时钟周期
+    - 时钟漂移（drift）、时钟偏差（skew）等问题
+
+  - 时间同步协议：
+    - NTP（Network Time Protocol，网络时间协议）可将参与设备的时间同步到协调世界时（UTC）误差在几毫秒内
+
+  - 实际应用挑战：
+    - 例如配音同步中的延迟和抖动（jitter）处理
+    - 为了减少延迟和抖动，有许多技术方法被提出和使用
+
+  - 某些领域对时间同步极为敏感：
+    - 例如金融交易系统（延迟和时间误差会造成巨大经济损失）
 
 
 
