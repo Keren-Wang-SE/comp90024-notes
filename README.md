@@ -1,9 +1,9 @@
 # COMP90024-CCC
 
 ## Week1 - How we got here
-- 1. What is cloud computing?
+- 1. What is cloud computing? 
     - In 2013, Cloud computing is a jargon term without a commonly accepted non-ambiguous scientific or technical definition. (Anything that is not on your computer, e.g.: gmail)
-    - Cloud computing is a jargon term without a commonly accepted nonambiguous scientific or technical definition. In science, cloudcomputing is a synonym for distributed computing over a network and means the ability to run a program on many connected computers at the same time.
+    - Cloud computing is a jargon term without a commonly accepted nonambiguous scientific or technical definition. **In science, cloudcomputing is a synonym for distributed computing over a network and means the ability to run a program on many connected computers at the same time.**
     - In 2016, Proponents claim that cloud computing allows companies to avoid upfront infrastructure costs, and focus on projects that differentiate their businesses instead of on infrastructure. Proponents also claim that cloud computing allows enterprises to get their applications up and running faster, with improved manageability and less maintenance, and enables IT to more rapidly adjust resources to meet fluctuating and unpredictable business demand. Cloud providers typically use a "pay as you go" model. This can lead to unexpectedly high charges if administrators do not adapt to the cloud pricing model. (Everyone has different flavor)
     - 在2013年，云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。（泛指所有不在你电脑上的东西，例如：Gmail）
     -   云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。在科学领域，云计算是“分布式计算”的同义词，指的是能够在许多连接的计算机上同时运行一个程序的能力。
@@ -13,7 +13,7 @@
 
 - 2. Cloud Characteristics (Lecture notes and then my paraphrasing)
     - On-demand self-service
-        - A consumer can provision computing capabilities as needed without requiring human   interaction with each service provider. 
+        - A consumer can provision computing capabilities as needed without requiring human interaction with each service provider. 
         - Scale computing resources up and down by needs without requiring human interaction with each service provider.
         - For anyone in any time - infinite availability (key)
     - Networked access
@@ -31,22 +31,21 @@
         - Resourcing optimization by measuring usage
         - monitor for load balance (e.g.: nigix)
     云计算的特征（讲义内容及个人释义）：
-    - 按需自助服务（On-demand self-service）
+    - **按需自助服务（On-demand self-service）**
         - 用户可以根据需要自行配置计算能力，无需与每个服务提供商人工交互。
         - 可以根据需求随时扩大或缩小计算资源规模，无需人工干预。
         - 任何人在任何时间都可以访问——无限可用性（关键点）。
-    - 网络访问（Networked access）
+    - **网络访问（Networked access）**
         - 各种能力可通过网络访问，并通过标准机制，使得不同类型的平台都能使用这些资源。
         - 资源可通过网络访问，并适配不同类型的客户端平台。
-    - 资源池化（Resource pooling）
+    - **资源池化（Resource pooling）**
         - 服务提供者将计算资源集中在一个资源池中，以多租户模型服务于多个用户，这些资源可能是物理的，也可能是虚拟的，并能根据用户需求动态分配与重新分配。
         - 提供者的资源被池化，可根据需求动态分配与重新分配。
         - 资源充足，可随时扩大或缩减规模。
-
-    - 快速弹性（Rapid Elasticity）
+    - **快速弹性（Rapid Elasticity）**
         - 各种能力可弹性地进行配置和释放，在某些情况下甚至可以自动执行，以便在有需求时快速扩展。
         - 各项服务能力可以根据需求快速、轻松地进行扩展。
-    - 可计量服务（Measured Service）
+    - **可计量服务（Measured Service**）**
         - 云系统通过在适当抽象层面上的计量功能，自动控制和优化资源使用。
         - 通过衡量使用量来优化资源分配，例如使用 Nginx 等工具监控负载平衡。
 
@@ -91,9 +90,9 @@
 
 
 
-4. History - tends in computing
+1. History - tends in computing
     1. Computing and Communication Technologies (r)evolution
-        - from centralised to decentralised
+        - from **centralised to decentralised**
     2. distributed system history
         - Once upon a time we had standards
         - Then we had more standards
@@ -113,10 +112,10 @@
             - Scalability problem
             - Sharing data between different organizations  
     - Grid Computing
-        - From computer-computer focus to organisation-organisation focus
-        - Can be thought of as a distributed system with non-interactive workloads.
-        - It is in contrast to the traditional notion of a supercomputer, which has many processors connected by a local high-speed computer bus instead of Ethernet.
-        - Grid computing is distinguished from conventional high-performance computing systems such as cluster computing in that grid computers have each node set to perform a different task/application. Grid computers also tend to be more heterogeneous and geographically dispersed (thus not physically coupled) than cluster computers.
+        - From computer-computer focus to **organisation-organisation** focus
+        - Can be thought of as a **distributed system with non-interactive workloads**.
+        - It is in contrast to the traditional notion of a supercomputer, which has many processors connected by a **local high-speed computer bus** instead of **Ethernet**.
+        - Grid computing is distinguished from **conventional high-performance computing systems** such as cluster computing in that grid computers have **each node set to perform a different task/application**. Grid computers also tend to be **more heterogeneous and geographically dispersed** (thus not physically coupled) than cluster computers.
         - Although a single grid can be dedicated to a particular application, commonly a grid is used for a variety of purposes. Grids are often constructed with general-purpose grid middleware software libraries. Grid sizes can be quite large.
         - Challenge
             - What resources are available
@@ -176,7 +175,7 @@
     - Grid computing
         - Refer to the top
     - Cluster Computing
-        - Clusters tend to be tightly coupled, e.g. a bunch of servers in a rack with high speed interconnects
+        - **Clusters tend to be tightly coupled**, e.g. a bunch of servers in a rack with high speed interconnects
         - Example
             - Super computer
     - Cloud Computing
@@ -200,6 +199,7 @@
   - 这些资源可以迅速配置和释放，且对管理者或服务提供者的交互需求最小化。
 
 
+
 ### past exam
 - > [2013 Q1] A) Explain what is meant by the terms:
     - > Grid Computing [1]
@@ -208,8 +208,10 @@
         - multiple servers rach-mounted which are accessible and you can run jobs across the cluster
     - > Cloud Computing [1]
         - is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources(networks, servers, storage, applications, services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.
+
 - > [2013 Q1, 2017 Q1 B [5]] B) Current Cloud Computing systems do not solve many key challenges of large-scale distributed systems. Discuss. [7]
     - by below
+
 - > [sample Q2 A] Describe some of the current challenges associated with large-scale distributed systems. [4] 
     - distributed systems didn't solve data heterogeneity. And we have big data challenges.
     - distributed systems has scalability and issues of fixed hardware system. We have distributed computers running on different hardware system.
@@ -231,15 +233,18 @@
     - Transport cost is zero - I can send as much data as I like for free
     - The network is homogeneous
     - Time is ubiquitous - Clock is same across all computers in network
+
 - > [sample Q2 B] Cloud computing solves some of these issues but not all. Explain. [4]
     - scalability and elastic scaling (purchase cloud when you need its service)
     - software deployment easier as we have snapshots/scripted deployment
     - more tools available, e.g.: load balancers, proven solutions. You might not have this much in distributed system
     - data centers better networked. they are targeted to solve your problems
     - geospatially distributed and easy to migrate application
-    - doesn't address many of the above though (但并没有解决上面的很多问题) (bandwidth from user/organization to data center)
+    - doesn't address many of the above though (但并没有解决上面的很多问题) (**bandwidth from user/organization to data center**)
+
 - > [2015 Q1] A) Describe some of the erroneous assumptions that are often made in designing large-scale distributed systems. [5]
     - above
+
 - > [2014 Q1] A) Discuss the major trends in research and research computing over the last 20 years that have led to the emergence of Cloud computing. [6]
     - Mainframes
         - main frames to move to the distributed system
@@ -248,6 +253,64 @@
     - distributed system move back to the centralised system
     - scale of compute/storage
     - clouds and data centres
+
+- > [2013 Q1] A) 解释以下术语的含义：
+    - > 网格计算（Grid Computing） [1]  
+        - 关注组织间的协作、协调、活动以及实现这些目标的技术  
+    - > 集群计算（Cluster Computing） [1]  
+        - 多个机架安装的服务器，可以被访问并在整个集群上运行任务  
+    - > 云计算（Cloud Computing） [1]  
+        - 一种模型，用于实现对可配置计算资源（网络、服务器、存储、应用、服务）共享池的无处不在、方便、按需的网络访问，这些资源可以快速配置和释放，且管理或服务提供者交互需求最小  
+
+- > [2013 Q1, 2017 Q1 B [5]] B) 当前的云计算系统并没有解决大规模分布式系统的许多关键挑战。请讨论。 [7]  
+    - 见下方内容  
+
+- > [sample Q2 A] 描述与大规模分布式系统相关的一些当前挑战。 [4]  
+    - 分布式系统没有解决数据异构性问题。同时我们面临大数据带来的挑战。  
+    - 分布式系统存在可扩展性问题，以及固定硬件系统的限制。分布式计算通常运行在不同硬件环境中。  
+    - 故障容错问题尚未解决  
+        - 在分布式系统中可能发生多种故障  
+            - 例如：服务器故障或部分故障、网络中断、组件过载等  
+            - 目前尚无一种被广泛采用或接受的简单解决方案  
+    - 导致复杂的软件堆栈  
+        - 每个系统往往发展出自己的技术解决方案  
+            - 例如：使用队列、备份/故障转移机制来处理故障  
+            - 结果可能是必须针对具体需求“烹饪”出复杂的软件栈  
+    - （而所有这些错误假设都不应在第二周课程中出现）  
+        - 网络是可靠的  
+        - 网络延迟为零  
+        - 带宽是无限的——我可以在任意节点之间发送任意数量的数据  
+        - 网络是安全的  
+        - 拓扑结构不会变化——节点 x 总是存在  
+        - 系统只有一个管理员  
+        - 传输成本为零——我可以免费发送任意多的数据  
+        - 网络是同质的  
+        - 时间是同步的——网络中所有计算机的时钟一致  
+
+- > [sample Q2 B] 云计算解决了其中的一些问题，但不是全部。请解释。 [4]  
+    - 提供可扩展性和弹性扩展（按需购买云服务）  
+    - 软件部署更容易，因为我们有快照和脚本化部署工具  
+    - 提供更多可用工具，例如负载均衡器和成熟的解决方案，而在传统分布式系统中这些工具可能不多  
+    - 数据中心之间网络连接更好，针对特定问题进行优化  
+    - 地理分布性强，应用程序迁移更容易  
+    - 但仍未解决上文提到的许多问题（例如从用户/组织到数据中心的带宽问题）  
+
+- > [2015 Q1] A) 描述在设计大规模分布式系统时常见的一些错误假设。 [5]  
+    - 网络是可靠的  
+    - 延迟为零  
+    - 带宽是无限的  
+    - 网络是安全的  
+    - 所有节点都有统一的时间  
+
+- > [2014 Q1] A) 讨论过去 20 年中研究与科研计算的主要趋势，这些趋势导致了云计算的出现。 [6]  
+    - 大型主机系统（Mainframes）  
+        - 从主机向分布式系统转变  
+    - 去中心化的个人电脑  
+    - 互联网的爆炸式发展  
+    - 分布式系统又回归到集中式模式  
+    - 计算与存储的规模增长  
+    - 云和数据中心的兴起  
+
 
 ## Week2 - Domain Drivers – tour of some big data projects
 1. compute scaling
