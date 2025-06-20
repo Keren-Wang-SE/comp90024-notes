@@ -316,8 +316,8 @@
 1. compute scaling
     - method:
         1. Vertical Computational Scaling
-            - Have faster processors
-            - disabv: processor speed is limited  
+            - adv: Have faster processors. Switch your n GHz CPU for a 2n GHz one = 2x faster, Easy to do but cost more
+            - disadv: Limits of fundamental physics/matter (nanoCMOS)  
               Moore's law is no longer working, CPU stop goes faster as we expected
         2. Horizontal Computational Scaling
             - Have more processors
@@ -342,17 +342,19 @@
             - disadv: 
                 - 1) **add more** limition (see week3 - Amdahl's law)
                 - 2) harder to design, develop, test
+- I think at the time when it sort of peaked about 3.6 gigahertz, it was like the maximum clock speed maybe they exceeded it occasionally
 2. network scaling
     - volume of data on network grows each year
 3. massive amount of data generated among a time requires compute infrasture
     - e.g. mapping the sky with data from tele-scope
-1. 计算扩展（Compute Scaling）
+- 1. 计算扩展（Compute Scaling）
 - 方法：
     1. 垂直计算扩展（Vertical Computational Scaling）  
         - 使用更快的处理器  
         - 缺点：处理器速度存在极限  
           - 摩尔定律已逐渐失效，CPU 不再像预期那样不断加速  
-    2. 水平计算扩展（Horizontal Computational Scaling）  
+    2. 水平计算扩展（Horizontal Computational Scaling）
+        - HTC高吞吐量比HPC更重要  
         - 使用更多的处理器  
         - 优点：  
             - 1）易于**增加更多**（更多核心或节点集群）  
@@ -374,7 +376,22 @@
             - 2）成本增长不明显  
         - 缺点：  
             - 1）**增加更多**存在限制（见第3周内容：阿姆达尔定律）  
-            - 2）更难设计、开发、测试  
+            - 2）更难设计、开发、测试
+- Amdahl's Law:
+   最大加速比 = 1 /（1 - 并行部分） = 1 /（1 - 0.95） = 20
+   也就是说：
+   无论你用多少核心或处理器并行计算，最终的整体加速最多也只能是 20 倍。即便你有上千个处理器，那非并行的那 5% 部分仍然是瓶颈，限制了性能的上限 
+   非并行部分的比例决定了系统最终的加速上限
+- Gustafson-Barsis’s Law ：
+  如果你有更多处理器，你就能处理更大的问题（比如模拟更复杂的大脑、处理更大的图像等），
+  那么那 5% 的串行部分虽然绝对时间不变，但相对占比变小了，总执行效率仍然大大提升。
+  **S=(1−a)+aN**
+  **S是speedup总加速比，T是总时间，a是程序中可并行的部分占总时间的比例（0 ≤ a ≤ 1），N是处理器数量**
+  Amdahl's Law 假设问题规模不变（固定任务，增加核数看速度能快多少）
+  Gustafson’s Law 假设总时间 T 是固定的，问题规模可以增长（即：更多核 → 可以做更大的问题）
+  **Gustafson's Law 告诉我们：并行计算的真正价值不只是“把程序跑得更快”，而是“能在相同时间内处理更大的问题”。**
+
+  
 
 2. 网络扩展（Network Scaling）
 - 网络上的数据量每年都在增长  
@@ -497,6 +514,164 @@
 - 各种工具、技术与方法正在不断发展以应对这些挑战  
     - 仍有大量工作尚未完成  
     - 同时也需要领域知识的支持  
+
+- **补充**
+- Flynn’s Taxonomy
+    -SISD
+        A sequential execution computer, which does not use any parallelism in either the instruction stream or the data stream.
+        It consists of a control unit (CU or CPU) that fetches a single instruction stream from memory,
+        The control unit then generates the corresponding control signals,
+        These control signals drive a single processing unit to operate on a single data stream,
+        Thus, only one operation is executed at a time.
+        This is the basic model of the von Neumann architecture,
+        And it has virtually been phased out by modern computing systems that incorporate parallelism at various levels.
+        定义：
+        一种顺序执行的计算机架构，在指令流和数据流方面都不使用并行处理。
+        结构：
+        只有一个控制单元（Control Unit，CU 或 CPU），
+        从内存中获取一条指令流，
+        控制单元产生控制信号，
+        使一个处理单元对一个数据流执行操作，
+        一次只执行一个操作。
+        特性：
+        不具备并行性，
+        属于**冯·诺依曼架构（von Neumann）**的基本模型，
+        如今这种结构几乎已经被淘汰。
+
+– Single Instruction, Multiple Data streams (SIMD)
+    A parallel computing architecture in which multiple processing units (PUs/CPUs) perform different operations on the same data stream.
+    Each processor runs its own instruction stream, but all processors operate on the same input data.
+    Example:
+    Used in fault-tolerant computer systems,
+    For instance, multiple processors may run independent error-checking algorithms on the same data to ensure reliability and redundancy.
+
+    Note:
+    MISD architectures are rare in practice,
+    Mainly used in specialized applications such as mission-critical systems (e.g., avionics, spacecraft).
+    MISD（多指令流，单数据流）
+    一种并行计算架构，在该架构中，多个处理单元（PU/CPU）对相同的数据流执行不同的操作。
+    每个处理器运行自己的指令流，但所有处理器都处理同一组输入数据。
+    示例：
+    用于容错计算系统，
+    例如，多个处理器对同一数据流执行独立的错误检测算法，以实现高可靠性和冗余。
+
+    注意：
+    MISD 架构在实际中非常少见，
+    通常只用于特种应用场景，例如航空航天、飞行控制等关键任务系统。
+
+– Multiple Instruction, Single Data stream (MISD)
+    A parallel computing architecture in which multiple processing elements perform the same operation on multiple data points simultaneously.
+    The emphasis is on data-level parallelism:
+    There is only one instruction stream (one process),
+    But it is applied to many data elements in parallel.
+    Widely used in modern computing, especially in:
+    Multimedia processing (e.g., image and video processing),
+    Scientific simulations,
+    GPU architectures (Graphics Processing Units).
+    Examples of SIMD instruction sets include Intel SSE, AVX, and ARM NEON.
+    SIMD（单指令流，多数据流）
+    一种并行计算架构，多个处理单元可以在多个数据点上同时执行相同的操作。
+    重点在于数据级并行性（data-level parallelism）：
+    整个系统中只有一条指令流（即一个进程），
+    这条指令会被同时应用于多个数据元素。
+    在现代计算机中广泛应用，特别是在：
+    多媒体处理（如图像处理、视频解码等），
+    科学模拟，
+    **GPU 架构（图形处理器）**中。
+    SIMD 指令集的例子包括：Intel 的 SSE、AVX，以及 ARM 的 NEON
+
+
+– Multiple Instruction, Multiple Data streams (MIMD) 
+    A parallel computing architecture involving a number of processors that operate asynchronously and independently.
+    At any given time, different processors may be executing different instructions on different data elements.
+    MIMD machines can fall into two categories based on how memory is accessed:
+    Shared memory systems: all processors access a common memory space (e.g., multi-core CPUs),
+    Distributed memory systems: each processor has its own local memory and communicates via messages (e.g., cluster computing, MPI).
+    Most modern computing systems follow the MIMD model:
+    High Performance Computing (HPC),
+    Cloud computing clusters,
+    General-purpose multi-core processors.
+    一种并行计算架构，其中有多个处理器以异步且独立的方式运行。
+    在任意时刻，不同的处理器可以执行不同的指令，并处理不同的数据。
+    根据内存访问方式的不同，MIMD 系统可以分为两类：
+    共享内存系统：所有处理器访问同一块内存区域（例如多核 CPU）；
+    分布式内存系统：每个处理器有自己的本地内存，并通过消息传递进行通信（例如集群计算、使用 MPI 的系统）。
+
+    大多数现代计算系统都采用 MIMD 架构：
+    高性能计算（HPC），
+    云计算集群，
+    通用多核处理器。
+
+- 隐式并行（Implicit Parallelism）
+    由并行编程语言或自动并行化编译器支持，
+    它们负责自动识别哪些代码可以并行执行，负责计算调度和数据分配。
+    程序员用常规的顺序方式编写代码，系统自动寻找并行机会。
+    实际很难实现，因为编译器必须推断许多复杂的并行策略，尤其是在数据依赖性不明确的程序中。
+    显式并行（Explicit Parallelism）
+    需要程序员亲自负责并行化工作，包括：
+    将任务拆分成多个子任务（任务分解）；
+    把子任务分配到不同的处理器（任务映射）；
+    管理进程间通信（例如消息传递、同步）。
+    假设程序员最了解如何为特定应用实现最优的并行方式。
+    通常很复杂且不容易实现，尤其在大规模高性能计算中。
+    举例说明：
+    在使用 SPARTAN 高性能计算集群时，提交作业时可以使用 SLURM 脚本：
+
+
+    #SBATCH --ntasks=2 --cpus-per-task=4
+    表示你启动 2 个并行进程（tasks），每个进程内部用 4 个 CPU 核心进行线程并行，总共用 8 个核心。
+
+    #SBATCH --ntasks=1 --cpus-per-task=8
+    表示你启动 1 个进程，但该进程可以并行使用 8 个 CPU 核心。
+
+    尽管总核数一样，但这两种方式的并行模型不同，程序需要对线程/进程的结构有明确的控制，这属于显式并行编程的设计选择。
+
+- OpenMP
+    - Work Sharing Constructs
+    | 指令                     | 功能说明                 |
+    | ---------------------- | -------------------- |
+    | `#pragma omp for`      | 将循环迭代分配给不同线程执行       |
+    | `#pragma omp sections` | 将不同代码段分配给不同线程        |
+    | `#pragma omp single`   | 指定某一段代码只能由**一个线程**执行 |
+    | `#pragma omp task`     | 动态创建任务，由线程调度执行       |
+    - Thread Management
+    | 函数名                     | 功能说明       |
+    | ----------------------- | ---------- |
+    | `omp_set_num_threads()` | 设置线程的数量    |
+    | `omp_get_num_threads()` | 获取当前的线程总数  |
+    | `omp_get_thread_num()`  | 获取当前线程的 ID |
+    - Synchronization Constructs
+    | 机制名                                   | 功能说明                          |
+    | ------------------------------------- | ----------------------------- |
+    | `#pragma omp critical`                | **临界区**，一次只能一个线程进入，防止数据冲突     |
+    | `#pragma omp atomic`                  | 原子操作，用于同步简单操作，性能优于 `critical` |
+    | `#pragma omp barrier`                 | **线程屏障**，所有线程在此同步等待           |
+    | `omp_set_lock()` / `omp_unset_lock()` | 设置/释放锁，用于更细粒度的互斥控制            |
+    - Data Sharing Attributes
+    | 属性名            | 功能说明                                        |
+    | -------------- | ------------------------------------------- |
+    | `shared`       | 所有线程访问的是**同一份变量**                           |
+    | `private`      | 每个线程都有自己的变量副本                               |
+    | `firstprivate` | 每个线程有自己的变量副本，并由主线程进行初始化                     |
+    | `reduction`    | 各线程处理局部副本，最后将结果\*\*归约（合并）\*\*为一个值（如求和、最大值等） |
+    - Loop Scheduling
+    | 策略名       | 功能说明                |
+    | --------- | ------------------- |
+    | `static`  | 编译时预先确定每个线程负责哪些迭代   |
+    | `dynamic` | 运行时线程动态获取迭代任务       |
+    | `guided`  | 线程获取的迭代块数量逐渐减小，从大到小 |
+    | `auto`    | 交由编译器或运行时系统决定调度策略   |
+    - 可移植性与可扩展性（Portable and Scalable）
+        -OpenMP 被设计为可移植，支持多种硬件平台和操作系统，可用于多种编程语言：C、C++、Fortran、Python（通过扩展）等。
+
+
+
+
+
+
+
+
+
 
 ## Week3 - Overview of Distributed and Parallel Computing Systems
 1. Question: If n processors (cores) are thrown at a problem how much faster will it go?
