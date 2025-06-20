@@ -3,8 +3,12 @@
 ## Week1 - How we got here
 1. What is cloud computing?
     - In 2013, Cloud computing is a jargon term without a commonly accepted non-ambiguous scientific or technical definition. (Anything that is not on your computer, e.g.: gmail)
-    - 
+    - Cloud computing is a jargon term without a commonly accepted nonambiguous scientific or technical definition. In science, cloudcomputing is a synonym for distributed computing over a network and means the ability to run a program on many connected computers at the same time.
     - In 2016, Proponents claim that cloud computing allows companies to avoid upfront infrastructure costs, and focus on projects that differentiate their businesses instead of on infrastructure. Proponents also claim that cloud computing allows enterprises to get their applications up and running faster, with improved manageability and less maintenance, and enables IT to more rapidly adjust resources to meet fluctuating and unpredictable business demand. Cloud providers typically use a "pay as you go" model. This can lead to unexpectedly high charges if administrators do not adapt to the cloud pricing model. (Everyone has different flavor)
+    - 在2013年，云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。（泛指所有不在你电脑上的东西，例如：Gmail）
+   -   云计算是一个行话术语，没有一个被广泛接受的、明确的科学或技术定义。在科学领域，云计算是“分布式计算”的同义词，指的是能够在许多连接的计算机上同时运行一个程序的能力。
+   - 到了2016年，支持者声称，云计算可以让公司避免前期的基础设施投入成本，将精力集中在使其业务差异化的项目上，而不是基础设施本身。支持者还声称，云计算能让企业更快地上线应用程序，提升可管理性，减少维护工作，使信息技术部门能更快速地调整资源，以应对不断变化和不可预测的业务需求。云服务提供商通常采用“按需付费”模式。如果管理员没有根据云的定价模型进行调整，这可能会导致意外的高额费用。（每个人对云计算的理解都有所不同）
+  
 2. Cloud Characteristics (Lecture notes and then my paraphrasing)
     - On-demand self-service
         - A consumer can provision computing capabilities as needed without requiring human   interaction with each service provider. 
@@ -24,6 +28,41 @@
         - Cloud systems automatically control and optimize resource use by leveraging a metering  capability at some level of abstraction appropriate to the type of service.
         - Resourcing optimization by measuring usage
         - monitor for load balance (e.g.: nigix)
+    云计算的特征（讲义内容及个人释义）：
+
+    - 按需自助服务（On-demand self-service）
+
+        - 用户可以根据需要自行配置计算能力，无需与每个服务提供商人工交互。
+
+        - 可以根据需求随时扩大或缩小计算资源规模，无需人工干预。
+
+        - 任何人在任何时间都可以访问——无限可用性（关键点）。
+
+    - 网络访问（Networked access）
+
+        - 各种能力可通过网络访问，并通过标准机制，使得不同类型的平台都能使用这些资源。
+
+        - 资源可通过网络访问，并适配不同类型的客户端平台。
+
+    - 资源池化（Resource pooling）
+
+        - 服务提供者将计算资源集中在一个资源池中，以多租户模型服务于多个用户，这些资源可能是物理的，也可能是虚拟的，并能根据用户需求动态分配与重新分配。
+
+        - 提供者的资源被池化，可根据需求动态分配与重新分配。
+
+        - 资源充足，可随时扩大或缩减规模。
+
+    - 快速弹性（Rapid Elasticity）
+
+        - 各种能力可弹性地进行配置和释放，在某些情况下甚至可以自动执行，以便在有需求时快速扩展。
+
+        - 各项服务能力可以根据需求快速、轻松地进行扩展。
+
+    - 可计量服务（Measured Service）
+
+        - 云系统通过在适当抽象层面上的计量功能，自动控制和优化资源使用。
+
+        - 通过衡量使用量来优化资源分配，例如使用 Nginx 等工具监控负载平衡。
 3. Flavour
     - Compute clouds
       - Amazon Elastic compute cloud
@@ -38,6 +77,34 @@
       - Virtual image factories
     - Public(credit card and pay for using) /Private(Unimelb research cloud)/Hybrid(MRC run out of resource nad buy from Amazon)/Mobile/Health Clouds
     - complexity arise in: decision about what can we move out/what cost ot stay in/who is  allowed this to happen
+## 3. 云计算的类型（Flavour）
+
+- **计算型云（Compute Clouds）**
+  - Amazon 弹性计算云（Amazon Elastic Compute Cloud）
+  - Azure（微软云）
+
+- **数据型云（Data Clouds）**
+  - Amazon 简单存储服务（Amazon Simple Storage Service）
+  - Google 文档（Google Docs）
+  - iCloud（苹果云服务）
+  - Dropbox（云文件存储服务）
+
+- **应用型云（Application Clouds）**
+  - App Store（应用商店）
+  - 虚拟镜像工厂（Virtual Image Factories）
+
+- **云部署模式**
+  - 公有云（Public）：刷信用卡按使用量付费的云服务
+  - 私有云（Private）：如墨尔本大学的研究云（Unimelb Research Cloud）
+  - 混合云（Hybrid）：例如 MRC 资源耗尽时，从 Amazon 购买补充资源
+  - 移动云（Mobile Cloud）
+  - 健康云（Health Cloud）
+
+- **复杂性来源于：**
+  - 决策——我们能将哪些服务迁移到云上？
+  - 成本——保留在本地的成本是多少？
+  - 权限——谁被允许让这些事情发生？
+    - 
 4. History - tends in computing
     1. Computing and Communication Technologies (r)evolution
         - from centralised to decentralised
@@ -469,10 +536,10 @@
     - you are not factoring the overheads dealing with the scalling system. If you have parallel processing, this can carry additional overheads, e.g. loops, communications, variables introduced to deal with parallel aspects. While you don't have this overheads in sequential programs.
 
 - > [2014 Q3] A) What is Flynn’s Taxonomy? [2]
-    - |               | Simple Instruction | Multiple Instruction |
-        | ------------- | ------------------ | -------------------- |
-        | Single Data   | SISD               | MISD                 |
-        | Multiple Data | SIMD               | MIMD                 |
+    | -             |      | Simple Instruction | Multiple Instruction |
+    | ------------- | ---- | ------------------ |
+    | Single Data   | SISD | MISD               |
+    | Multiple Data | SIMD | MIMD               |
 
     - > a. What have been the implications of Flynn’s taxonomy on modern computer architectures?  
     Give examples of its consequences on modern multi-core servers and clusters of servers such as the University of Melbourne Edward HPC facility. [4]
@@ -580,19 +647,19 @@ Cloud computing is a model for enabling ubiquitous, convenient, on-demand networ
 - <img src="./docs/8.jpg" width="70%" height="50%" />
 1. Deployment Models
 
-    || Private| Community| Public| Hybrid |
-    |---|---|---|---|---|
-    |pro|1. **Control**<br>2. **Consolidation of resources**<br>3. **Easier to secure** - easy to setup firewall<br>4. **More trust**||1. Utility computing<br>2. **Can focus on core business** - no need to care infrasture or be a devop<br>3. Cost-effective - use as much as you need<br>4. “Right-sizing”<br>5. Democratisation of computing<br>|1. **Cloud-bursting** - Use private cloud, but burst into (突然变成) public cloud when needed (What is hybrid cloud) |
-    |con|1. Relevance to core business?<br>e.g. Netflix to Amazon<br>2. Staff/management overheads - need devop<br>3. Hardware obsolescence - need to refesh hardware<br>4. Over/under utilisation challenges - recycle resources<br>| | 1. **Security** - people can see your sensitive data<br>2. Loss of control<br>3. **Possible lock-in** - difficult to switch Azure if using AWS<br>4. Dependency of Cloud provider continued existence<br>| 1. How do you move data/resources when needed?<br>2. How to decide (in real time?) what data can go to public cloud?<br>3. Is the public cloud compliant with PCI-DSS (Payment Card Industry – Data Security Standard)?<br>|
-    |example| | | | Eucalyptus, VMWare vCloud Hybrid Service|
+    |         | Private                                                                                                                                                                                                                      | Community | Public                                                                                                                                                                                                          | Hybrid                                                                                                                                                                                                                      |
+    | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | pro     | 1. **Control**<br>2. **Consolidation of resources**<br>3. **Easier to secure** - easy to setup firewall<br>4. **More trust**                                                                                                 |           | 1. Utility computing<br>2. **Can focus on core business** - no need to care infrasture or be a devop<br>3. Cost-effective - use as much as you need<br>4. “Right-sizing”<br>5. Democratisation of computing<br> | 1. **Cloud-bursting** - Use private cloud, but burst into (突然变成) public cloud when needed (What is hybrid cloud)                                                                                                        |
+    | con     | 1. Relevance to core business?<br>e.g. Netflix to Amazon<br>2. Staff/management overheads - need devop<br>3. Hardware obsolescence - need to refesh hardware<br>4. Over/under utilisation challenges - recycle resources<br> |           | 1. **Security** - people can see your sensitive data<br>2. Loss of control<br>3. **Possible lock-in** - difficult to switch Azure if using AWS<br>4. Dependency of Cloud provider continued existence<br>       | 1. How do you move data/resources when needed?<br>2. How to decide (in real time?) what data can go to public cloud?<br>3. Is the public cloud compliant with PCI-DSS (Payment Card Industry – Data Security Standard)?<br> |
+    | example |                                                                                                                                                                                                                              |           |                                                                                                                                                                                                                 | Eucalyptus, VMWare vCloud Hybrid Service                                                                                                                                                                                    |
 
 2. Delivery Models
 - responsibilities:
     - <img src="./docs/9.jpg" width="70%" height="50%" />
 -
-    | | Iaas| Paas|Saas|
-    |---|---|---|---|
-    | example| Amazon Web Services<br>Oracle Public Cloud<br>NeCTAR| Azure| Gmail|
+    |         | Iaas                                                 | Paas  | Saas  |
+    | ------- | ---------------------------------------------------- | ----- | ----- |
+    | example | Amazon Web Services<br>Oracle Public Cloud<br>NeCTAR | Azure | Gmail |
 
 ### past exam
 - > [2015 Q6] C) Describe some of the challenges in delivering hybrid Clouds? [2]
@@ -605,10 +672,10 @@ Cloud computing is a model for enabling ubiquitous, convenient, on-demand networ
     - > a. Is this justified? Your answer should cover:
         - > i. public, private and hybrid Cloud computing models and their advantages and disadvantages; [4]
                 
-            || Private|Public| Hybrid |
-            |---|---|---|---|
-            |pro|1. **Control**<br>2. **Consolidation of resources**<br>3. **Easier to secure** - easy to setup firewall<br>4. **More trust**|1. Utility computing<br>2. **Can focus on core business** - no need to care infrasture or be a devop<br>3. Cost-effective - use as much as you need<br>4. “Right-sizing”<br>5. Democratisation of computing<br>|1. **Cloud-bursting** - Use private cloud, but burst into (突然变成) public cloud when needed |
-            |con|1. Relevance to core business?<br>e.g. Netflix to Amazon<br>2. Staff/management overheads - need devop<br>3. Hardware obsolescence - need to refesh hardware<br>4. Over/under utilisation challenges - recycle resources<br>| 1. **Security** - people can see your sensitive data<br>2. Loss of control<br>3. **Possible lock-in** - difficult to switch Azure if using AWS<br>4. Dependency of Cloud provider continued existence<br>| 1. How do you move data/resources when needed?<br>2. How to decide (in real time?) what data can go to public cloud?<br>3. Is the public cloud compliant with PCI-DSS (Payment Card Industry – Data Security Standard)?<br>|
+            |     | Private                                                                                                                                                                                                                      | Public                                                                                                                                                                                                          | Hybrid                                                                                                                                                                                                                      |
+            | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+            | pro | 1. **Control**<br>2. **Consolidation of resources**<br>3. **Easier to secure** - easy to setup firewall<br>4. **More trust**                                                                                                 | 1. Utility computing<br>2. **Can focus on core business** - no need to care infrasture or be a devop<br>3. Cost-effective - use as much as you need<br>4. “Right-sizing”<br>5. Democratisation of computing<br> | 1. **Cloud-bursting** - Use private cloud, but burst into (突然变成) public cloud when needed                                                                                                                               |
+            | con | 1. Relevance to core business?<br>e.g. Netflix to Amazon<br>2. Staff/management overheads - need devop<br>3. Hardware obsolescence - need to refesh hardware<br>4. Over/under utilisation challenges - recycle resources<br> | 1. **Security** - people can see your sensitive data<br>2. Loss of control<br>3. **Possible lock-in** - difficult to switch Azure if using AWS<br>4. Dependency of Cloud provider continued existence<br>       | 1. How do you move data/resources when needed?<br>2. How to decide (in real time?) what data can go to public cloud?<br>3. Is the public cloud compliant with PCI-DSS (Payment Card Industry – Data Security Standard)?<br> |
         - > ii. the different flavours of “X as a Service (XaaS)” models including their associated advantages and disadvantages. [4]
             - IaaS
                 - adv
@@ -724,32 +791,32 @@ Cloud computing is a model for enabling ubiquitous, convenient, on-demand networ
     - **Services** are often used for this. Typically combinations and commonality of services can be used to form a **Service-oriented Architecture (SoA)**.
 3. SOA goal
 
-    |||
-    |---|---|
-    |A set of externally facing services|that a business wants to provide to external collaborators|
-    |An architectural pattern|based on service providers, one or more brokers, and service requestors based on agreed service descriptions|
-    |A set of architectural principles, patterns and criteria|that support modularity, encapsulation, loose coupling, separation of concerns, reuse and composability|
-    |A programming model|complete with standards, tools and technologies that supports development and support of services (note that there can be many flavours of services)|
-    |A middleware solution|optimized for service assembly, orchestration, monitoring, and management (Can include tools and approaches that combine services together.)<br/>e.g. as workflows. - later on security lecture|
+    |                                                          |                                                                                                                                                                                                 |
+    | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | A set of externally facing services                      | that a business wants to provide to external collaborators                                                                                                                                      |
+    | An architectural pattern                                 | based on service providers, one or more brokers, and service requestors based on agreed service descriptions                                                                                    |
+    | A set of architectural principles, patterns and criteria | that support modularity, encapsulation, loose coupling, separation of concerns, reuse and composability                                                                                         |
+    | A programming model                                      | complete with standards, tools and technologies that supports development and support of services (note that there can be many flavours of services)                                            |
+    | A middleware solution                                    | optimized for service assembly, orchestration, monitoring, and management (Can include tools and approaches that combine services together.)<br/>e.g. as workflows. - later on security lecture |
 
 4. SOA design principle
 
-    |||exmaple|
-    |---|---|---|
-    |Standardized service contract| Services adhere to a communications agreement, as defined collectively by one or more service-description documents.|Use defined twitter API|
-    |Service loose coupling| Services maintain a relationship that minimizes dependencies and only requires that they maintain an awareness of each other.|
-    |Service abstraction| Beyond descriptions in the service contract, services hide logic from the outside world.|Twitter decide the API for you to use i.e. the rule how you can see inside through the Twitter, hide things which you have no access to
-    |Service reusability| Logic is divided into services with the intention of promoting reuse.|
-    |Service autonomy| Services have control over the logic they encapsulate.|you can have tweets older than 2 weeks than you really can't
-    |Service statelessness| Services minimize resource consumption by deferring the management of state information when necessary.|
-    |Service discoverability| Services are supplemented with communicative meta data by which they can be effectively discovered and interpreted.|
-    |Service composability| Services are effective composition participants, regardless of the size and complexity of the composition.|
-    |Service granularity| a design consideration to provide optimal scope at the right granular level of the business functionality in a service operation.|
-    |Service normalization| services are decomposed and/or consolidated to a level that minimizes redundancy, for performance optimization, access, and aggregation.|
-    |Service optimization| high-quality services that serve specific functions are generally preferable to general purpose low-quality ones.|
-    |Service relevance| functionality is presented at a level of granularity recognized by the user as a meaningful service.|
-    |Service encapsulation| many services are consolidated for use under a SOA and their inner workings hidden.|
-    |Service location transparency| the ability of a service consumer to invoke a service regardless of its actual location in the network.|client only use url to use the service on the web regardless of location of service
+    |                               |                                                                                                                                          | exmaple                                                                                                                                 |
+    | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+    | Standardized service contract | Services adhere to a communications agreement, as defined collectively by one or more service-description documents.                     | Use defined twitter API                                                                                                                 |
+    | Service loose coupling        | Services maintain a relationship that minimizes dependencies and only requires that they maintain an awareness of each other.            |
+    | Service abstraction           | Beyond descriptions in the service contract, services hide logic from the outside world.                                                 | Twitter decide the API for you to use i.e. the rule how you can see inside through the Twitter, hide things which you have no access to |
+    | Service reusability           | Logic is divided into services with the intention of promoting reuse.                                                                    |
+    | Service autonomy              | Services have control over the logic they encapsulate.                                                                                   | you can have tweets older than 2 weeks than you really can't                                                                            |
+    | Service statelessness         | Services minimize resource consumption by deferring the management of state information when necessary.                                  |
+    | Service discoverability       | Services are supplemented with communicative meta data by which they can be effectively discovered and interpreted.                      |
+    | Service composability         | Services are effective composition participants, regardless of the size and complexity of the composition.                               |
+    | Service granularity           | a design consideration to provide optimal scope at the right granular level of the business functionality in a service operation.        |
+    | Service normalization         | services are decomposed and/or consolidated to a level that minimizes redundancy, for performance optimization, access, and aggregation. |
+    | Service optimization          | high-quality services that serve specific functions are generally preferable to general purpose low-quality ones.                        |
+    | Service relevance             | functionality is presented at a level of granularity recognized by the user as a meaningful service.                                     |
+    | Service encapsulation         | many services are consolidated for use under a SOA and their inner workings hidden.                                                      |
+    | Service location transparency | the ability of a service consumer to invoke a service regardless of its actual location in the network.                                  | client only use url to use the service on the web regardless of location of service                                                     |
 
 ### Web Services
 1. Web Services & SOA
@@ -767,10 +834,10 @@ Cloud computing is a model for enabling ubiquitous, convenient, on-demand networ
 3. SOAP/WS v.s. ReST  
     SOAP (Simple Object Access Protocol)
 
-    |ReST|SOAP/WS|
-    |---|---|
-    is centered around resources, and the way they can be manipulated (added, deleted, etc.) remotely|built upon the <u>Remote Procedure Call paradigm (a language independent function call that spans another system)</u>|
-    |Actually ReST is more of a style to use HTTP than a separate protocol|while SOAP/WS is a stack of protocols that covers every aspect of using a remote service, from service discovery, to service description, to the actual request/response|
+    | ReST                                                                                              | SOAP/WS                                                                                                                                                                  |
+    | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | is centered around resources, and the way they can be manipulated (added, deleted, etc.) remotely | built upon the <u>Remote Procedure Call paradigm (a language independent function call that spans another system)</u>                                                    |
+    | Actually ReST is more of a style to use HTTP than a separate protocol                             | while SOAP/WS is a stack of protocols that covers every aspect of using a remote service, from service discovery, to service description, to the actual request/response |
 4. How to describes the functionality offered by a web service?
     - WSDL: is an XML-based interface description language that describes the functionality offered by a web service.
     - WSDL provides a machine-readable description of how the service can be called, what parameters it expects, and what results/data structures it returns:
@@ -886,12 +953,12 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
             9. Consider error conditions: what might go wrong?
             ```
     -  ROA actions
-        - |      Action       |               HTTP METHOD                |
-            | :---------------: | :--------------------------------------: |
-            |  Create Resource  | PUT to a new URI POST to an existing URI |
-            | Retrieve Resource |                   GET                    |
-            |  Update Resource  |         POST to an existing URI          |
-            |  Delete Resource  |                  DELETE                  |
+        |         -         |                  Action                  | HTTP METHOD |
+        | :---------------: | :--------------------------------------: |
+        |  Create Resource  | PUT to a new URI POST to an existing URI |
+        | Retrieve Resource |                   GET                    |
+        |  Update Resource  |         POST to an existing URI          |
+        |  Delete Resource  |                  DELETE                  |
         - Don't mapping PUT to Update and POST to create
             - **PUT** should be used when target resource URL is known by the client.
             - **POST** should be used when target resource URL is server generated
@@ -907,22 +974,22 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
 
 ### past exam
 - > [2015 Q2] A) Explain the general principles that should underlie the design of Service-Oriented Architectures (SOA). [7]
-    - |||exmaple|
-        |---|---|---|
-        |Standardized service contract| Services adhere to a communications agreement, as defined collectively by one or more service-description documents.|Use defined twitter API|
-        |Service loose coupling| Services maintain a relationship that minimizes dependencies and only requires that they maintain an awareness of each other.|
-        |Service abstraction| Beyond descriptions in the service contract, services hide logic from the outside world.|Twitter decide the API for you to use i.e. the rule how you can see inside through the Twitter, hide things which you have no access to
-        |Service reusability| Logic is divided into services with the intention of promoting reuse.|
-        |Service autonomy| Services have control over the logic they encapsulate.|you can have tweets older than 2 weeks than you really can't
-        |Service statelessness| Services minimize resource consumption by deferring the management of state information when necessary.|
-        |Service discoverability| Services are supplemented with communicative meta data by which they can be effectively discovered and interpreted.|
-        |Service composability| Services are effective composition participants, regardless of the size and complexity of the composition.|
-        |Service granularity| a design consideration to provide optimal scope at the right granular level of the business functionality in a service operation.|
-        |Service normalization| services are decomposed and/or consolidated to a level that minimizes redundancy, for performance optimization, access, and aggregation.|
-        |Service optimization| high-quality services that serve specific functions are generally preferable to general purpose low-quality ones.|
-        |Service relevance| functionality is presented at a level of granularity recognized by the user as a meaningful service.|
-        |Service encapsulation| many services are consolidated for use under a SOA and their inner workings hidden.|
-        |Service location transparency| the ability of a service consumer to invoke a service regardless of its actual location in the network.|client only use url to use the service on the web regardless of location of service
+    | -                             |                                                                                                                                          |                                                                                                                                         | exmaple |
+    | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+    | Standardized service contract | Services adhere to a communications agreement, as defined collectively by one or more service-description documents.                     | Use defined twitter API                                                                                                                 |
+    | Service loose coupling        | Services maintain a relationship that minimizes dependencies and only requires that they maintain an awareness of each other.            |
+    | Service abstraction           | Beyond descriptions in the service contract, services hide logic from the outside world.                                                 | Twitter decide the API for you to use i.e. the rule how you can see inside through the Twitter, hide things which you have no access to |
+    | Service reusability           | Logic is divided into services with the intention of promoting reuse.                                                                    |
+    | Service autonomy              | Services have control over the logic they encapsulate.                                                                                   | you can have tweets older than 2 weeks than you really can't                                                                            |
+    | Service statelessness         | Services minimize resource consumption by deferring the management of state information when necessary.                                  |
+    | Service discoverability       | Services are supplemented with communicative meta data by which they can be effectively discovered and interpreted.                      |
+    | Service composability         | Services are effective composition participants, regardless of the size and complexity of the composition.                               |
+    | Service granularity           | a design consideration to provide optimal scope at the right granular level of the business functionality in a service operation.        |
+    | Service normalization         | services are decomposed and/or consolidated to a level that minimizes redundancy, for performance optimization, access, and aggregation. |
+    | Service optimization          | high-quality services that serve specific functions are generally preferable to general purpose low-quality ones.                        |
+    | Service relevance             | functionality is presented at a level of granularity recognized by the user as a meaningful service.                                     |
+    | Service encapsulation         | many services are consolidated for use under a SOA and their inner workings hidden.                                                      |
+    | Service location transparency | the ability of a service consumer to invoke a service regardless of its actual location in the network.                                  | client only use url to use the service on the web regardless of location of service                                                     |
 - > [2015 Q2] B) Explain why and how Cloud infrastructures have benefited from SOA. [3]
     - standardized interfaces available tn enable you not worry how the cloud internal do tasks for external interactions
     - When an architecture is completely contained within the same machine, components can communicate directly
@@ -990,12 +1057,12 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
 #### challenge
 1. four "Vs"
 
-    |Big data challenges||
-    |---|---|
-    |Volume| No one really knows how much new data is being generated, but the amount of information being collected is huge.
-    |Velocity| **the frequency (that data arrive)** at which new data is being brought into the system and analytics performed
-    |Variety| **the variability and complexity** of data schema. The more complex the data schema(s) you have, the higher the probability of them changing along the way, adding more complexity.
-    |Veracity| **the level of trust** in the data accuracy (provenance); the more diverse sources you have, the more unstructured they are, the less veracity you have.
+    | Big data challenges |                                                                                                                                                                                     |
+    | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Volume              | No one really knows how much new data is being generated, but the amount of information being collected is huge.                                                                    |
+    | Velocity            | **the frequency (that data arrive)** at which new data is being brought into the system and analytics performed                                                                     |
+    | Variety             | **the variability and complexity** of data schema. The more complex the data schema(s) you have, the higher the probability of them changing along the way, adding more complexity. |
+    | Veracity            | **the level of trust** in the data accuracy (provenance); the more diverse sources you have, the more unstructured they are, the less veracity you have.                            |
 
 2. Big Data Calls for Ad hoc Solutions
     - While Relational DBMSs are extremely good at ensuring consistency, they rely on normalized data models that, in a world of big data (think about Veracity and Variety) can no longer be taken for granted.
@@ -1003,12 +1070,12 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
     - While there is nothing preventing SQL to be used in distributed environments, alternative query languages have been used for distributed databases, hence they are sometimes called NoSQL DBMSs
 
 3. DBMSs for Distributed Environments
-    - |||e.g.|
-        |---|---|---|
-        |key-value store|is a DBMS that allows the retrieval of a chunk of data given a key: **fast, but crude**|(e.g. Redis, PostgreSQL Hstore, Berkeley DB)
-        |BigTable DBMS store|data in columns grouped into column families, with rows potentially containing different columns of the same family for **quick retrive**|(e.g. Apache Cassandra, Apache Accumulo) 
-        |Document-oriented DBMS store|- data as structured documents, usually expressed as XML or JSON<br/>- Document-oriented databases are one of the main categories of NoSQL databases|(e.g. Apache CouchDB, MongoDB)
-        |NoSQL DBMSs|While there is nothing preventing SQL to be used in distributed environments, alternative query languages have been used for distributed databases, hence they are sometimes called NoSQL DBMSs|
+    | -                            |                                                                                                                                                                                                 |                                              | e.g. |
+    | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+    | key-value store              | is a DBMS that allows the retrieval of a chunk of data given a key: **fast, but crude**                                                                                                         | (e.g. Redis, PostgreSQL Hstore, Berkeley DB) |
+    | BigTable DBMS store          | data in columns grouped into column families, with rows potentially containing different columns of the same family for **quick retrive**                                                       | (e.g. Apache Cassandra, Apache Accumulo)     |
+    | Document-oriented DBMS store | - data as structured documents, usually expressed as XML or JSON<br/>- Document-oriented databases are one of the main categories of NoSQL databases                                            | (e.g. Apache CouchDB, MongoDB)               |
+    | NoSQL DBMSs                  | While there is nothing preventing SQL to be used in distributed environments, alternative query languages have been used for distributed databases, hence they are sometimes called NoSQL DBMSs |
     - Why Document-oriented DBMS for Big data?
         - While Relational DBMSs are extremely good for ensuring consistency and availability, the normalization that lies at the heart of a relational database model implies fine-grained data, which are less conducive to partition-tolerance than coarse-grained data.
             - Example:
@@ -1024,11 +1091,11 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
 4. Brewer’s CAP Theorem
     - Consistency, Availability, Partition-Tolerance
 
-        |||
-        |---|---|
-        |Consistency|every client receiving an answer receives **the same answer** from all nodes in the cluster (it doesn't depend on which node is quired)
-        |Availability|every client receives **an answer** from any node in the cluster (which might differ from node to node)
-        |Partition-Tolerance|the cluster **keeps on operating** when one or more nodes cannot communicate with the rest of the cluster
+        |                     |                                                                                                                                         |
+        | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+        | Consistency         | every client receiving an answer receives **the same answer** from all nodes in the cluster (it doesn't depend on which node is quired) |
+        | Availability        | every client receives **an answer** from any node in the cluster (which might differ from node to node)                                 |
+        | Partition-Tolerance | the cluster **keeps on operating** when one or more nodes cannot communicate with the rest of the cluster                               |
     - Brewer’s CAP Theorem: you can only pick any two of Consistency, Availability and Partition-Tolerance.
         - <img src="./docs/13.jpg" width="30%" height="50%" />
         - The CAP theorem forces us to consider trade-offs among different options
@@ -1046,10 +1113,10 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
     1. Two phase commit: Consistency and Availability
         - This is the usual algorithm used in relational DBMS's (and MongoDB)
 
-            ||what does it entail?|by|
-            |---|---|---|
-            |enforces consistency|every database is in a consistent state, and all are left in the same state|1. locking data that are within the transaction scope <br/>2. performing transactions on write-ahead logs <br/>3. completing transactions (commit) only when all nodes in the cluster have performed the transaction <br/>4. aborts transactions (rollback) when a partition is detected
-            |reduced availability|data lock, stop in case of partition
+            |                      | what does it entail?                                                        | by                                                                                                                                                                                                                                                                                       |
+            | -------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+            | enforces consistency | every database is in a consistent state, and all are left in the same state | 1. locking data that are within the transaction scope <br/>2. performing transactions on write-ahead logs <br/>3. completing transactions (commit) only when all nodes in the cluster have performed the transaction <br/>4. aborts transactions (rollback) when a partition is detected |
+            | reduced availability | data lock, stop in case of partition                                        |
         - Conclusion
             - Therefore, two-phase commit is a good solution when the cluster is co-located, less good when it is distributed
     2. Paxos: Consistency and Partition-Tolerance
@@ -1088,10 +1155,10 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
         - makes it easier to move data files around, 
             - e.g. when adding new nodes to the cluster
     - sharding strategies:
-        |||
-        |---|---|
-        |Hash sharding|to distribute rows evenly across the cluster|
-        |Range sharding|similar rows (say, tweets coming for the same area) that are stored on the same node|
+        |                |                                                                                      |
+        | -------------- | ------------------------------------------------------------------------------------ |
+        | Hash sharding  | to distribute rows evenly across the cluster                                         |
+        | Range sharding | similar rows (say, tweets coming for the same area) that are stored on the same node |
 6. Replication and Sharding
     - What is replication?   
         - Replication is the action of storing the same row (or document) on different nodes to make the database fault-tolerant.
@@ -1174,24 +1241,24 @@ Representational State Transfer (ReST) is intended to evoke an image of how a we
     - Since a quorum has to be reached, it is better to have an odd number of voting members (the arbiter in this diagram is only illustrative)
 4. MongoDB vs CouchDB Clusters
 
-    |                | MongoDB                                                      | CouchDB                                                      |
-    | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-    | complexity     | Higher                                                       | Lower                                                        |
-    | Availability   | Lower                                                        | Higher                                                       |
-    | Accessibility  | MongoDB software routers must be embedded in application servers | Can connected by any HTTP client                             |
-    | Data Integrity | Lossing two nodes in the MongoDB in this example implies losing write access to half the data, and possibly read access too, depending on the cluster configuration parameters and the nature of the lost node (primary or secondary) | Losing two nodes out of three in the CouchDB example implies losing access to between 1/4 and 1/2 the data, depending on the nodes that fail|in the MongoDB example implies **losing write access |
-    | Functionality  | Some features, such as unique indexes, are not supported in MongoDB sharded environments | Can support this                                             |
-    | CAP            | <u>**Two-phase commit**</u> for replicating data from primary to secondary. <br/>**<u>Paxos-like</u>** to elect a primary node in a replica-set. | MVCC                                                         |
+    |                | MongoDB                                                                                                                                                                                                                               | CouchDB                                                                                                                                      |
+    | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+    | complexity     | Higher                                                                                                                                                                                                                                | Lower                                                                                                                                        |
+    | Availability   | Lower                                                                                                                                                                                                                                 | Higher                                                                                                                                       |
+    | Accessibility  | MongoDB software routers must be embedded in application servers                                                                                                                                                                      | Can connected by any HTTP client                                                                                                             |
+    | Data Integrity | Lossing two nodes in the MongoDB in this example implies losing write access to half the data, and possibly read access too, depending on the cluster configuration parameters and the nature of the lost node (primary or secondary) | Losing two nodes out of three in the CouchDB example implies losing access to between 1/4 and 1/2 the data, depending on the nodes that fail | in the MongoDB example implies **losing write access |
+    | Functionality  | Some features, such as unique indexes, are not supported in MongoDB sharded environments                                                                                                                                              | Can support this                                                                                                                             |
+    | CAP            | <u>**Two-phase commit**</u> for replicating data from primary to secondary. <br/>**<u>Paxos-like</u>** to elect a primary node in a replica-set.                                                                                      | MVCC                                                                                                                                         |
 
-    ||CouchDB|MongoDB|
-    |---|---|---|
-    |clusters are (difference in API)|less complex|more complex
-    |clusters are|more available|less available, as - by default - only primary nodes can talk to clients for read operations, (and exclusively so for write operations)
-    |software routers|while any HTTP client can connect to CouchDB|(MongoS) must be embedded in application servers
-    |Losing two nodes|out of three in the CouchDB architecture shown, means **losing access to between 1/4 and 1/2 the data, depending on the nodes that fail**|in the MongoDB example implies **losing write access** to half the data (although there are ten nodes in the cluster instead of three), and possibly read access too, depending on the cluster configuration parameters and the nature (primary or secondary) of the lost nodes|
-    |Some features (such as unique indexes)||not supported in MongoDB sharded environmen
-    |Classification of Distributed Processing Algorithms|uses MVCC|- uses a mix of two-phase commit (for replicating data from primary to secondary nodes) <br/> - Paxos-like (to elect a primary node in a replica-set)|
-    |emphasis on and all have partition-tolerance|Availability|consistency|
+    |                                                     | CouchDB                                                                                                                                   | MongoDB                                                                                                                                                                                                                                                                         |
+    | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | clusters are (difference in API)                    | less complex                                                                                                                              | more complex                                                                                                                                                                                                                                                                    |
+    | clusters are                                        | more available                                                                                                                            | less available, as - by default - only primary nodes can talk to clients for read operations, (and exclusively so for write operations)                                                                                                                                         |
+    | software routers                                    | while any HTTP client can connect to CouchDB                                                                                              | (MongoS) must be embedded in application servers                                                                                                                                                                                                                                |
+    | Losing two nodes                                    | out of three in the CouchDB architecture shown, means **losing access to between 1/4 and 1/2 the data, depending on the nodes that fail** | in the MongoDB example implies **losing write access** to half the data (although there are ten nodes in the cluster instead of three), and possibly read access too, depending on the cluster configuration parameters and the nature (primary or secondary) of the lost nodes |
+    | Some features (such as unique indexes)              |                                                                                                                                           | not supported in MongoDB sharded environmen                                                                                                                                                                                                                                     |
+    | Classification of Distributed Processing Algorithms | uses MVCC                                                                                                                                 | - uses a mix of two-phase commit (for replicating data from primary to secondary nodes) <br/> - Paxos-like (to elect a primary node in a replica-set)                                                                                                                           |
+    | emphasis on and all have partition-tolerance        | Availability                                                                                                                              | consistency                                                                                                                                                                                                                                                                     |
     - These differences are rooted in different approaches to an unsolvable problem, a problem defined by Brewer’s CAP Theorem
         - first 5
     - The different choices of strategies explains the different cluster architectures of these two DBMSs
@@ -1229,12 +1296,12 @@ Your answer should include the way in which these solutions implement MapReduce.
     - > What other data properties can be associated with big data challenges? [1]
         - Veracity: the level of trust in the data accuracy (provenance); the more diverse sources you have, the more unstructured they are, the less veracity you have.
 - > [2013 Q7] A) Many research domains are facing "big data" challenges. Big data is not just related to the size of the data sets. Explain. [5]
-    - |Big data challenges||
-        |---|---|
-        |Volume| No one really knows how much new data is being generated, but the amount of information being collected is huge.
-        |Velocity| **the frequency (that data arrive)** at which new data is being brought into the system and analytics performed
-        |Variety| **the variability and complexity** of data schema. The more complex the data schema(s) you have, the higher the probability of them changing along the way, adding more complexity.
-        |Veracity| **the level of trust** in the data accuracy (provenance); the more diverse sources you have, the more unstructured they are, the less veracity you have.
+    | -        | Big data challenges                                                                                                                                                                 |  |
+    | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Volume   | No one really knows how much new data is being generated, but the amount of information being collected is huge.                                                                    |
+    | Velocity | **the frequency (that data arrive)** at which new data is being brought into the system and analytics performed                                                                     |
+    | Variety  | **the variability and complexity** of data schema. The more complex the data schema(s) you have, the higher the probability of them changing along the way, adding more complexity. |
+    | Veracity | **the level of trust** in the data accuracy (provenance); the more diverse sources you have, the more unstructured they are, the less veracity you have.                            |
     - For life science, there can be all kinds of flavours of datasets and it's not as simple as integrating them all as there can be huge heterogeneous across data sets.
 - > [2013 Q7] B) What capabilities are currently offered or will be required for Cloud Computing infrastructures such as the NeCTAR Research Cloud to tackle these "big data" challenges. [5]  
 You may refer to specific research disciplines, e.g. life sciences, astrophysics, urban research (or others!) in your answer to part A) and B) of this question.
@@ -1302,15 +1369,15 @@ Your answer should cover challenges with data distribution, traditional database
 - Containerization
   - Pros
     - It allows virtual instances to share a single host OS (and associated drivers, binaries, libraries) to reduce these wasted resources since each container only holds the application and related binaries. The rest are shared among the containers.
-- |Parameter | Virtual Machines                                             | Container                                     |
-  | ------------- | ------------------------------------------------------------ | --------------------------------------------- |
-  | Guest OS      | Run on virtual Hardware, have their own OS kernels           | Share same OS kernel                          |
-  | Communication | Through Ethernet devices                                     | IPC mechanisms (pipes, sockets)               |
-  | Security      | Depends on the Hypervisor                                    | Requires close scrutiny                       |
-  | Performance   | Small overhead incurs when instructions are translated from guest to host OS | Near native performance                       |
-  | Isolation     | File systems and libraries are not shared between guest and host OS | File systems can be shared, and libraries are |
-  | Startup time  | Slow (minutes)                                               | Fast (a few seconds)                          |
-  | Storage       | Large                                                        | Small (most are reusable)                     |
+| -             | Parameter                                                                    | Virtual Machines                              | Container |
+| ------------- | ---------------------------------------------------------------------------- | --------------------------------------------- |
+| Guest OS      | Run on virtual Hardware, have their own OS kernels                           | Share same OS kernel                          |
+| Communication | Through Ethernet devices                                                     | IPC mechanisms (pipes, sockets)               |
+| Security      | Depends on the Hypervisor                                                    | Requires close scrutiny                       |
+| Performance   | Small overhead incurs when instructions are translated from guest to host OS | Near native performance                       |
+| Isolation     | File systems and libraries are not shared between guest and host OS          | File systems can be shared, and libraries are |
+| Startup time  | Slow (minutes)                                                               | Fast (a few seconds)                          |
+| Storage       | Large                                                                        | Small (most are reusable)                     |
 
 - In real world they can co-exist
   - When deploying applications on the cloud, the base computation unit is a Virtual Machine. Usually Docker containers are deployed on top of VMs.
@@ -1519,11 +1586,11 @@ Container? [1]
 Terminology
 - <img src="./docs/15.png" width="30%" height="30%" />
 - 
-    |||
-    |---|---|
-    |Virtual Machine Monitor/Hypervisor|The virtualisation layer between the underlying hardware the virtual machines and guest operating systems it supports. Give a perception of a whole machine.
-    |Virtual Machine|A representation of a real machine using hardware/software that can host a guest operating system
-    |Guest Operating System|An operating system that runs in a virtual machine environment that would otherwise run directly on a separate physical system.
+    |                                    |                                                                                                                                                              |
+    | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | Virtual Machine Monitor/Hypervisor | The virtualisation layer between the underlying hardware the virtual machines and guest operating systems it supports. Give a perception of a whole machine. |
+    | Virtual Machine                    | A representation of a real machine using hardware/software that can host a guest operating system                                                            |
+    | Guest Operating System             | An operating system that runs in a virtual machine environment that would otherwise run directly on a separate physical system.                              |
 1. What happens in a VM?
     - <img src="./docs/16.jpg" width="70%" height="30%" />
     - Inside the virtual machine, there are Virtual Network Device, VHD(Virtual Hard disk), VMDK(Virtual Machinie Disk), qcow2(QEMU Copy on Write)
@@ -1531,12 +1598,12 @@ Terminology
         - Which one is determined by image that is launched
 
 2. Motivation (why we want VM/virtualization/advantages) ~~& History~~
-    |motivation||
-    |---|---|
-    |Server Consolidation|1. Increased utilisation<br/>2. Reduced energy consumption
-    |Personal virtual machines can be created on demand|1. No hardware purchase needed<br/>2. Public cloud computing - won't lockin Amazon
-    |Security/Isolation|Share a single machine with multiple users - won't want everyone see what you are doing
-    |Hardware independence|Relocate to different hardware
+    | motivation                                         |                                                                                         |
+    | -------------------------------------------------- | --------------------------------------------------------------------------------------- |
+    | Server Consolidation                               | 1. Increased utilisation<br/>2. Reduced energy consumption                              |
+    | Personal virtual machines can be created on demand | 1. No hardware purchase needed<br/>2. Public cloud computing - won't lockin Amazon      |
+    | Security/Isolation                                 | Share a single machine with multiple users - won't want everyone see what you are doing |
+    | Hardware independence                              | Relocate to different hardware                                                          |
     - originally, virtual machine = an efficient, isolated duplicate of the real machine
         - Properties of interest (can also be thought as motivation):
             - Fidelity
@@ -1547,38 +1614,38 @@ Terminology
                 - The VMM manages all hardware resources
     - history see lecture 8.1 slide 7
 3. Classification of Instructions
-    ||||
-    |---|---|---|
-    |Privileged Instructions|instructions that trap if the processor is in user mode and do not trap in kernel mode
-    |Sensitive Instructions|instructions whose behaviour depends on the mode or configuration of the hardware|Different behaviours depending on whether in user or kernel mode<br/>- e.g. POPF interrupt (for interrupt flag handling)
-    |Innocuous Instructions|instructions that are neither privileged nor sensitive|Read data, add numbers etc
+    |                         |                                                                                        |                                                                                                                          |
+    | ----------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+    | Privileged Instructions | instructions that trap if the processor is in user mode and do not trap in kernel mode |
+    | Sensitive Instructions  | instructions whose behaviour depends on the mode or configuration of the hardware      | Different behaviours depending on whether in user or kernel mode<br/>- e.g. POPF interrupt (for interrupt flag handling) |
+    | Innocuous Instructions  | instructions that are neither privileged nor sensitive                                 | Read data, add numbers etc                                                                                               |
     - Popek and Goldberg Theorem  
         - For any conventional third generation computer, a virtual machine monitor may be constructed if the set of **sensitive instructions** for that computer is a subset of the set of **privileged instructions** i.e. have to be trappable
     - x86 architecture was historically not virtualisable, due to **<u>sensitive instructions</u> that could not be trapped** 
     - Intel and AMD introduced extensions to make x86 virtualisable
 3. What are the requirements for virtualisation?
     - <img src="./docs/17.jpg" width="40%" height="30%" />
-    |Typical Virtualisation Strategy||Achieved by|problem|
-    |---|---|---|---|
-    |De-privileging (trap-and-emulate)|trap-and-emulate: VMM emulates the effect on system/hardware resources of privileged instructions whose execution traps into the VMM|running GuestOS at a lower hardware priority level than the VMM|Problematic on some architectures where privileged instructions do not trap when executed at de-privileged level
-    |Primary/shadow structures|1. VMM maintains “shadow” copies of critical structures whose “primary” versions are manipulated by the GuestOS, e.g. memory page tables<br/>2. Primary copies needed to insure correct versions are visible to GuestOS
-    |Memory traces|Controlling access to memory so that the shadow and primary structure remain coherent|write-protect primary copies so that update operations cause page faults which can be caught, interpreted, and addressed <br/>- Someones app/code doesn’t crash the server you are using!!!
+    | Typical Virtualisation Strategy   |                                                                                                                                                                                                                         | Achieved by                                                                                                                                                                                 | problem                                                                                                          |
+    | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+    | De-privileging (trap-and-emulate) | trap-and-emulate: VMM emulates the effect on system/hardware resources of privileged instructions whose execution traps into the VMM                                                                                    | running GuestOS at a lower hardware priority level than the VMM                                                                                                                             | Problematic on some architectures where privileged instructions do not trap when executed at de-privileged level |
+    | Primary/shadow structures         | 1. VMM maintains “shadow” copies of critical structures whose “primary” versions are manipulated by the GuestOS, e.g. memory page tables<br/>2. Primary copies needed to insure correct versions are visible to GuestOS |
+    | Memory traces                     | Controlling access to memory so that the shadow and primary structure remain coherent                                                                                                                                   | write-protect primary copies so that update operations cause page faults which can be caught, interpreted, and addressed <br/>- Someones app/code doesn’t crash the server you are using!!! |
     - Do sensitive instructions and privileged instructions both need to be trap-and-emulate?
         - All sensitive/privileged instructions have to be dealt with. Some will need to be emulated/translated
         - others can just happen depending on the mode and/or whether para-virtualisation is supported.
         - (Popek and Goldberg Theorem above and sth below)
 4. Virtualisation approaches (compare with each other pair wise 1 v.s. 2, ...)
-    |Aspects of VMMs|What is it?|e.g.|Advantages|Disadvantages|
-    |---|---|---|---|---|
-    |Full virtualisation|allow an unmodified guest OS to run in isolation by simulating full hardware <br/>- Guest OS has no idea it is not on physical machine|VMWare|1. Guest is unaware it is executing within a VM<br/>2. Guest OS need not be modified<br/>3. No hardware or OS assistance required<br/>4. Can run legacy OS|1. can be less efficient|
-    |Para-virtualisation|- VMM/Hypervisor exposes special interface to guest OS for better performance. Requires a modified/hypervisor-aware Guest OS <br/> - Can optimise systems to use this interface since not all instructions need to be trapped/dealt with because "VMM emulates the effect on system/hardware resources of privileged instructions whose execution traps into the VMM"|Xen|1. Lower virtualisation overheads, so better performance|1. Need to modify guest OS - Can’t run arbitrary OS!<br/>2. Less portable<br/>3. Less compatibility<br/>
-    |Hardware-assisted virtualisation|Hardware provides architectural support for running a Hypervisor<br/>- New processors typically have this<br/>- Requires that all sensitive instructions trappable|KVM|1. Good performance<br/>2. Easier to implement<br/>3. Advanced implementation supports hardware assisted DMA, memory virtualisation|1. Needs hardware support
-    |software virtualization|Any virtualisation that does not involve hardware support.|
-    |Binary Translation|Trap and execute occurs by scanning guest instruction stream and replacing sensitive instructions with emulated code <br/> - Don’t need hardware support, but can be much harder to achieve|VMWare|1. Guest OS need not be modified<br/>2. No hardware or OS assistance required<br/>3. Can run legacy OS|1. Overheads<br/> 2. Complicated<br/> 3. Need to replace instructions “on-the-fly”<br/> 4. Library support to help this, e.g. vCUDA
-    |Bare Metal Hypervisor|VMM runs directly on actual hardware<br/>- Boots up and runs on actual physical machine<br/>- VMM has to support device drivers, all HW mgt |VMWare ESX Server
-    |Hosted Virtualisation|VMM runs on top of another operating system|VMWare Workstation
-    |Operating System Level Virtualisation|1. Lightweight VMs<br/>2. Instead of whole-system virtualisation, the OS creates mini-containers|Docker|1. Lightweight<br/>2. Many more VMs on same hardware<br/>3. Can be used to package applications and all OS dependencies into container|1. Can only run apps designed for the same OS<br/>2. Cannot host a different guest OS<br/>3. Can only use native file systems<br/>4. Uses same resources as other containers|
-    |Memory Virtualisation|VMM maintains shadow page tables in lock-step with the page tables.<br/> detail see below section|||1. Adds additional management overhead
+    | Aspects of VMMs                       | What is it?                                                                                                                                                                                                                                                                                                                                                           | e.g.               | Advantages                                                                                                                                                 | Disadvantages                                                                                                                                                                |
+    | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Full virtualisation                   | allow an unmodified guest OS to run in isolation by simulating full hardware <br/>- Guest OS has no idea it is not on physical machine                                                                                                                                                                                                                                | VMWare             | 1. Guest is unaware it is executing within a VM<br/>2. Guest OS need not be modified<br/>3. No hardware or OS assistance required<br/>4. Can run legacy OS | 1. can be less efficient                                                                                                                                                     |
+    | Para-virtualisation                   | - VMM/Hypervisor exposes special interface to guest OS for better performance. Requires a modified/hypervisor-aware Guest OS <br/> - Can optimise systems to use this interface since not all instructions need to be trapped/dealt with because "VMM emulates the effect on system/hardware resources of privileged instructions whose execution traps into the VMM" | Xen                | 1. Lower virtualisation overheads, so better performance                                                                                                   | 1. Need to modify guest OS - Can’t run arbitrary OS!<br/>2. Less portable<br/>3. Less compatibility<br/>                                                                     |
+    | Hardware-assisted virtualisation      | Hardware provides architectural support for running a Hypervisor<br/>- New processors typically have this<br/>- Requires that all sensitive instructions trappable                                                                                                                                                                                                    | KVM                | 1. Good performance<br/>2. Easier to implement<br/>3. Advanced implementation supports hardware assisted DMA, memory virtualisation                        | 1. Needs hardware support                                                                                                                                                    |
+    | software virtualization               | Any virtualisation that does not involve hardware support.                                                                                                                                                                                                                                                                                                            |
+    | Binary Translation                    | Trap and execute occurs by scanning guest instruction stream and replacing sensitive instructions with emulated code <br/> - Don’t need hardware support, but can be much harder to achieve                                                                                                                                                                           | VMWare             | 1. Guest OS need not be modified<br/>2. No hardware or OS assistance required<br/>3. Can run legacy OS                                                     | 1. Overheads<br/> 2. Complicated<br/> 3. Need to replace instructions “on-the-fly”<br/> 4. Library support to help this, e.g. vCUDA                                          |
+    | Bare Metal Hypervisor                 | VMM runs directly on actual hardware<br/>- Boots up and runs on actual physical machine<br/>- VMM has to support device drivers, all HW mgt                                                                                                                                                                                                                           | VMWare ESX Server  |
+    | Hosted Virtualisation                 | VMM runs on top of another operating system                                                                                                                                                                                                                                                                                                                           | VMWare Workstation |
+    | Operating System Level Virtualisation | 1. Lightweight VMs<br/>2. Instead of whole-system virtualisation, the OS creates mini-containers                                                                                                                                                                                                                                                                      | Docker             | 1. Lightweight<br/>2. Many more VMs on same hardware<br/>3. Can be used to package applications and all OS dependencies into container                     | 1. Can only run apps designed for the same OS<br/>2. Cannot host a different guest OS<br/>3. Can only use native file systems<br/>4. Uses same resources as other containers |
+    | Memory Virtualisation                 | VMM maintains shadow page tables in lock-step with the page tables.<br/> detail see below section                                                                                                                                                                                                                                                                     |                    |                                                                                                                                                            | 1. Adds additional management overhead                                                                                                                                       |
     - <img src="./docs/18.jpg" width="60%" height="30%" />  for Full virtualisation, Binary Translation
         - but in each case there can be some differences in rangs for each service see lecture 8.1 slides 15, 19
     - <img src="./docs/19.jpg" width="40%" height="30%" /> for Para-virtualisation, Hardware-assisted virtualisation
@@ -1646,20 +1713,20 @@ Terminology
         - picture above
 - > [2016 Q5] A) Popek and Goldberg laid down the foundations for computer virtualization in their 1974 paper, Formal Requirements for Third Generation Architectures.
     - > a. Identify and explain the different types of classification of instruction sets for virtualization to occur according to the theorem of Popek and Goldberg. You should include the relationships between the instruction sets. [3]
-        - |||
-            |---|---|
-            |Privileged Instructions|instructions that trap if the processor is in user mode and do not trap in kernel mode
-            |Sensitive Instructions|instructions whose behaviour depends on the mode or configuration of the hardware|
-            |Innocuous Instructions|instructions that are neither privileged nor sensitive|
+        | -                       |                                                                                        |  |
+        | ----------------------- | -------------------------------------------------------------------------------------- |
+        | Privileged Instructions | instructions that trap if the processor is in user mode and do not trap in kernel mode |
+        | Sensitive Instructions  | instructions whose behaviour depends on the mode or configuration of the hardware      |
+        | Innocuous Instructions  | instructions that are neither privileged nor sensitive                                 |
         - relation = subset
             - For any conventional third generation computer, a virtual machine monitor may be constructed if the set of **sensitive instructions** for that computer is a subset of the set of **privileged instructions** i.e. have to be trappable
         - innocuous instructions do not need to be trapped and dealt with and hence can be considered separately.
     - > b. Describe how these principles are realized by modern virtual machine monitors/hypervisors. [2]
-        - |Typical Virtualisation Strategy||
-            |---|---|
-            |De-privileging (trap-and-emulate)|trap-and-emulate: VMM emulates the effect on system/hardware resources of privileged instructions whose execution traps into the VMM|
-            |Primary/shadow structures|1. VMM maintains “shadow” copies of critical structures whose “primary” versions are manipulated by the GuestOS, e.g. memory page tables<br/>2. Primary copies needed to insure correct versions are visible to GuestOS
-            |Memory traces|Controlling access to memory so that the shadow and primary structure remain coherent
+        | -                                 | Typical Virtualisation Strategy                                                                                                                                                                                         |  |
+        | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+        | De-privileging (trap-and-emulate) | trap-and-emulate: VMM emulates the effect on system/hardware resources of privileged instructions whose execution traps into the VMM                                                                                    |
+        | Primary/shadow structures         | 1. VMM maintains “shadow” copies of critical structures whose “primary” versions are manipulated by the GuestOS, e.g. memory page tables<br/>2. Primary copies needed to insure correct versions are visible to GuestOS |
+        | Memory traces                     | Controlling access to memory so that the shadow and primary structure remain coherent                                                                                                                                   |
         - sensitive/privileged instructions (calls) have to be trapped and dealt with
     - > c. Explain the differences between full virtualization and para-virtualisation. Give an example of a hypervisor that uses full virtualization and an example of a hypervisor that uses paravirtualisation. [2]
         - full virtualization
@@ -1898,17 +1965,17 @@ Terminology
                 - However, there may be functions that take longer to return a result, hence they incur timeouts and lock connections with clients in the process, hence it is better to transform them into asynchronous functions
                     - a publish/subscribe pattern involving a queuing system can be used to deal with asynchronous functions
             - How them work?
-                |Function|How|
-                |---|---|
-                |Synchronous functions|return their result immediately
-                |Asynchronous functions|return a code that informs the client that the execution has started, and then trigger an event when the execution completes
+                | Function               | How                                                                                                                          |
+                | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+                | Synchronous functions  | return their result immediately                                                                                              |
+                | Asynchronous functions | return a code that informs the client that the execution has started, and then trigger an event when the execution completes |
         - stateless, 
             - What is it?
                 - A subset of functions with side-effects is composed of stateful functions 
-                    |||e.g.|
-                    |---|---|---|
-                    |stateful function|is one whose output changes in relation to internally stored information (hence its input cannot entirely predict its output)| a function that adds items to a "shopping cart" and retains that information internally
-                    |stateless function|is one that does not store information internally|adding an item to a "shopping cart" stored in a DBMS service and not internally would make the function above stateless, but not side-effect free.
+                    |                    |                                                                                                                               | e.g.                                                                                                                                               |
+                    | ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+                    | stateful function  | is one whose output changes in relation to internally stored information (hence its input cannot entirely predict its output) | a function that adds items to a "shopping cart" and retains that information internally                                                            |
+                    | stateless function | is one that does not store information internally                                                                             | adding an item to a "shopping cart" stored in a DBMS service and not internally would make the function above stateless, but not side-effect free. |
             - Why it is important for FaaS?
                 - Because there are multiple instances of the same function, and there is no guarantee the same user would call the same function instance twice.
         - which make them ideal for 
@@ -1926,11 +1993,11 @@ Terminology
     - What does it do?
         - A FaaS service allows functions to be added, removed, updated, executed, and auto-scaled
 4. Why we need Faas?
-    |Reason|How|
-    |---|---|
-    |Simpler deployment|the service provider takes care of the infrastructure
-    |Reduced computing costs|only the time during which functions are executed is billed
-    |Reduced application complexity|due to loosely-coupled architecture
+    | Reason                         | How                                                         |
+    | ------------------------------ | ----------------------------------------------------------- |
+    | Simpler deployment             | the service provider takes care of the infrastructure       |
+    | Reduced computing costs        | only the time during which functions are executed is billed |
+    | Reduced application complexity | due to loosely-coupled architecture                         |
 5. FaaS application
     - Functions are triggered by events
     - Functions can call each other
@@ -1947,11 +2014,11 @@ Terminology
 - > [sample Q7] A) In the context of Cloud, what is meant by serverless computing? [1]
     - A way of developing applications as **collections of functions** that are deployed on a computing infrastructure without the need to manage it.
 - > [sample Q7] B) List three reasons why it may be beneficial to choose a serverless solution. [3]
-    - |Reason|How|
-        |---|---|
-        |Simpler deployment|the service provider takes care of the infrastructure
-        |Reduced computing costs|only the time during which functions are executed is billed
-        |Reduced application complexity|due to loosely-coupled architecture
+    | -                              | Reason                                                      | How |
+    | ------------------------------ | ----------------------------------------------------------- |
+    | Simpler deployment             | the service provider takes care of the infrastructure       |
+    | Reduced computing costs        | only the time during which functions are executed is billed |
+    | Reduced application complexity | due to loosely-coupled architecture                         |
         - "Why we need Faas?" above
 - > [sample Q7] C) Discuss the role of functions in serverless computing. Your answer should include key properties of functions that make them suitable for serverless environments.  [3]
     - Serverless applications are composed of functions
@@ -1995,22 +2062,22 @@ Terminology
 2. What is it?
     - There is a good deal of overlap and confusion among terms such as business intelligence, machine learning, statistics, and data mining. For the sake of clarity, we just use the more general term (big) data analytics
 3. Examples of Analytics
-    ||
-    |---|
-    |Full-text searching
-    |Aggregation of data
-    |Clustering
-    |Sentiment analysis
-    |Recommendations
+    |                     |
+    | ------------------- |
+    | Full-text searching |
+    | Aggregation of data |
+    | Clustering          |
+    | Sentiment analysis  |
+    | Recommendations     |
 4. Challenges of Big Data Analytics
     - A framework for analysing big data has to distribute both data and processing over many nodes, which implies:
-        |imply||
-        |---|---|
-        |Reading and writing distributed datasets
-        |Preserving data in the presence of failing data nodes
-        |Supporting the execution of MapReduce tasks
-        |Being fault-tolerant|a few failing compute nodes may slow down the processing, but not stop it
-        |Coordinating the execution of tasks across a cluster
+        | imply                                                 |                                                                           |
+        | ----------------------------------------------------- | ------------------------------------------------------------------------- |
+        | Reading and writing distributed datasets              |
+        | Preserving data in the presence of failing data nodes |
+        | Supporting the execution of MapReduce tasks           |
+        | Being fault-tolerant                                  | a few failing compute nodes may slow down the processing, but not stop it |
+        | Coordinating the execution of tasks across a cluster  |
 5. Tools for Analytics:
     - Apache Hadoop
     - Apache Spark
@@ -2026,12 +2093,12 @@ Terminology
     - HDFS blocks v.s. blocks
         - HDFS blocks are much larger than blocks used by an ordinary file system (say, 4 KB versus 128MB)
         - Why?
-            ||How achieve it?|
-            |---|---|
-            |Reduced need for memory to store information about where the blocks are|metadata
-            |More efficient use of the network|with a large block, a reduced number network connections needs to be kept open
-            |Reduced need for seek operations on big files
-            |Efficient when most data of a block have to be processed
+            |                                                                         | How achieve it?                                                                |
+            | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+            | Reduced need for memory to store information about where the blocks are | metadata                                                                       |
+            | More efficient use of the network                                       | with a large block, a reduced number network connections needs to be kept open |
+            | Reduced need for seek operations on big files                           |
+            | Efficient when most data of a block have to be processed                |
     - HDFS Architecture
         - A HDFS file is a collection of blocks stored in datanodes, with metadata (such as the position of those blocks) that is stored in namenodes
         - <img src="./docs/23.png" width="60%" height="50%" />
@@ -2129,18 +2196,18 @@ Terminology
 6. Resilient Distributed Dataset (RDDs) (Central to Spark)
     - What is it?
         - the way data are stored in Spark during computation, and understanding them is crucial to writing programs in Spark:
-            ||What?|
-            |---|---|
-            |Resilient|data are stored redundantly, hence a failing node would not affect their integrity
-            |Distributed|data are split into chunks, and these chunks are sent to different nodes
-            |Dataset|a dataset is just a collection of objects, hence very generic
+            |             | What?                                                                              |
+            | ----------- | ---------------------------------------------------------------------------------- |
+            | Resilient   | data are stored redundantly, hence a failing node would not affect their integrity |
+            | Distributed | data are split into chunks, and these chunks are sent to different nodes           |
+            | Dataset     | a dataset is just a collection of objects, hence very generic                      |
     - Properties of RDDs
         - RDDs are
-            |Property||benefit
-            |---|---|---|
-            |immutable|once defined, they cannot be changed|simplifies parallel computations on them, and <br/>is consistent with the functional programming paradigm
-            |transient|they are meant to be used only once, then discarded (but they can be cached, if it improves performance)|
-            |lazily-evaluated|the evaluation process happens only <br/> - when data cannot be kept in an RDD, as when the number of objects in an RDD has to be computed, <br/> - or an RDD has to be written to a file (these are called actions), but <br/> - not when an RDD are transformed into another RDD (these are called transformations)|optimizing the process
+            | Property         |                                                                                                                                                                                                                                                                                                                       | benefit                                                                                                   |
+            | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+            | immutable        | once defined, they cannot be changed                                                                                                                                                                                                                                                                                  | simplifies parallel computations on them, and <br/>is consistent with the functional programming paradigm |
+            | transient        | they are meant to be used only once, then discarded (but they can be cached, if it improves performance)                                                                                                                                                                                                              |
+            | lazily-evaluated | the evaluation process happens only <br/> - when data cannot be kept in an RDD, as when the number of objects in an RDD has to be computed, <br/> - or an RDD has to be written to a file (these are called actions), but <br/> - not when an RDD are transformed into another RDD (these are called transformations) | optimizing the process                                                                                    |
             - The transformations in the program use lazy evaluation, hence Spark has the possibility of optimizing the process
     - How to Build an RDD?
         - created out of data stored elsewhere (HDFS, a local text file, a DBMS)
@@ -2386,12 +2453,12 @@ Terminology
             - Can this user invoke this service, make use of this data?
             - Complementary to authenticationL Know it is this user, now can we restrict/enforce what they can/cannot do
     - Many different approaches for authorisation
-        |approach|e.g.|
-        |---|---|
-        |Group Based Access Control|your project VMs
-        |Role Based Access Control|RBAC
-        |Identity Based Access Control|IBAC
-        |Attribute Based Access Control|ABAC
+        | approach                       | e.g.             |
+        | ------------------------------ | ---------------- |
+        | Group Based Access Control     | your project VMs |
+        | Role Based Access Control      | RBAC             |
+        | Identity Based Access Control  | IBAC             |
+        | Attribute Based Access Control | ABAC             |
     - Many Technologies
         - XACML, PERMIS, CAS, VOMS, AKENTI, VOMS, SAML, WS-*
     - typical model: RBAC
