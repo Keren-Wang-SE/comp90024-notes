@@ -627,6 +627,9 @@
     尽管总核数一样，但这两种方式的并行模型不同，程序需要对线程/进程的结构有明确的控制，这属于显式并行编程的设计选择。
 
 - OpenMP
+    - Widely used API for shared-memory parallel programming
+      Provides features that make it easier to write parallel
+      programs for multicore and multiprocessor systems 
 
     - Work Sharing Constructs：
 
