@@ -1193,7 +1193,89 @@
         - Data splitting and analysis can be done in many ways
         - Commonly exploited model: MapReduce
     
+[sample Q5] A) 解释 Amdahl 定律并讨论其在实际实现中的挑战。 [2]
 
+程序总是受限于其串行部分所带来的限制。
+
+无论投入多少个核心，程序的运行速度都将受限于算法中的串行部分。
+
+并且还包括为实现并行性而引入的开销（如循环控制、变量管理、通信等）。
+
+[2014 Q4] A) 定义用于并行程序**扩展加速比（scaled speed-up）**的 Gustafson-Barsis 定律。 [2]
+
+Gustafson-Barsis 定律表明：当拥有足够数量的处理器和待处理任务时，程序的加速比总能达到需求。随着更多可并行的硬件资源的出现，我们可以在相同时间内解决更大规模的问题。
+
+[2014 Q4] B) 某并行程序在 32 个处理器上运行耗时 128 秒。其中串行部分耗时 12 秒。问该程序的**扩展加速比（scaled speed-up）**是多少？ [2]
+
+使用公式：S(N) = N - α × (N - 1)，其中：
+
+N = 处理器数量
+
+α = 串行时间 / 并行总时间
+
+带入数据计算：
+
+S(N) = 32 - (12/128) × (32 - 1) = 931 / 32 = 29.09375
+
+[2014 Q4] C) 根据 Gustafson-Barsis 定律，如果程序运行在单处理器上，其理论上运行时间将是多少？相比之下，32 个处理器运行速度提升了多少倍？ [3]
+
+根据 b/ 的计算，32 处理器下理论加速比为 29.09375 倍。
+
+如果 32 个处理器运行耗时 128 秒，则单处理器理论上需要时间：
+
+29.09375 × 128 = 3724 秒
+
+[2014 Q4] D) 为什么上面提到的“理论上（theoretically）”要用斜体表示？ [3]
+
+因为这个计算没有考虑并行系统中额外引入的开销。例如：
+
+循环控制
+
+通信同步
+
+并行变量管理
+
+而这些开销在串行程序中是不存在的，所以“理论上”的意思是忽略了现实中并行性带来的复杂性。
+
+[2014 Q3] A) 什么是 Flynn 分类法？ [2]
+| | 简单指令（Simple Instruction） | 多重指令（Multiple Instruction） |
+| --------------- | ---------------------------- | ------------------------------- |
+| 单数据流 | SISD | MISD |
+| 多数据流 | SIMD | MIMD |
+
+a. Flynn 分类法对现代计算机架构有何影响？请举例说明其在现代多核服务器和如墨尔本大学 Edward HPC 设施中的应用影响。 [4]
+
+Edward 高性能计算集群使用的是 MIMD 架构，这意味着可以同时运行多个应用程序，每个程序处理不同类型的数据，但仍然在同一个集群内。这样大大提升了计算效率和资源利用率。
+
+[2015 Q4] A) 在高性能计算的背景下，解释以下术语：
+
+a. 数据并行化（Data Parallelization） [1]
+
+面对大规模数据，需要将其分割为小块，利用并行方法同时进行处理、分析和聚合。
+
+b. 计算并行化（Compute Parallelization） [1]
+
+利用多个进程和线程同时执行任务，从而实现并发计算。
+
+[2015 Q4] D) 应用的计算并行化可以通过多种模型实现，包括任务农场（task farming）和 SPMD（单程序多数据）。请描述这些方法并说明其适用场景。 [3]
+
+Master-Worker / Task-Farming（主从任务农场模型）
+
+主进程将问题划分为多个小任务
+
+分发给多个工作进程并收集部分结果，最终合并为最终输出
+
+类似于分而治之，由主进程负责“拆分”和“合并”
+
+单程序多数据（SPMD）
+
+每个进程执行同一段代码，但处理的数据是不同部分
+
+通常将数据划分分配给可用处理器
+
+数据的划分与分析可以通过多种方式完成
+
+一个被广泛采用的模型为：MapReduce
 ## Week4 - The Spartan HPC System
 - Some background on supercomputing, high performance computing, parallel computing, research computing (they're not the same thing!).
     - Supercomputer
@@ -1210,11 +1292,48 @@
             - With a cluster architecture, applications can be more easily parallelised across them.
         - Research computing is the software applications used by a research community to aid research.
             - challenge: This skills gap is a major problem and must be addressed because as the volume, velocity, and variety of datasets increases then researchers will need to be able to process this data.
+- 1. 超级计算、高性能计算、并行计算、科研计算的一些背景（它们并不完全相同）
+    超级计算（Supercomputer）
+
+    指的是在其所处时代具有卓越计算能力的单一计算机系统。
+
+    集群计算（Clustered Computing）
+
+    指的是两个或多个计算机作为一个统一资源协同工作。
+
+    例如：通过高速局域网连接在一起的一组小型计算机。
+
+    优点：提升性能并提供冗余（容错能力）。
+
+    高性能计算（HPC, High Performance Computing）
+
+    指的是其架构能够实现高于平均水平性能的计算系统。
+
+    基于集群的 HPC 是最有效、最经济、最具可扩展性的方法，因此在超级计算领域占主导地位。
+
+    并行与科研计算（Parallel and Research Programming）
+
+    并行计算指的是将作业或进程提交到多个处理器，并将数据或任务分割给它们并行执行。
+
+    使用集群架构时，应用程序更容易进行并行化。
+
+    科研计算指的是研究社区用于辅助科研的软件应用。
+
+    挑战：技能缺口是一个严重问题，随着数据集的规模、速度和多样性增长，研究人员需要具备处理这些数据的能力。
+
 2. Flynn’s Taxonomy and Multicore System
     - Over time computing systems have moved towards multi-processor, multi-core, and often multi-threaded and multi-node systems.
     - As computing technology has moved increasingly to the MIMD taxonomic classification additional categories have been added:
         - Single program, multiple data streams (SPMD)
         - Multiple program, multiple data streams (MPMD)
+- 2. Flynn 分类法与多核系统
+    随着时间推移，计算系统不断发展为多处理器、多核，常常还有多线程和多节点结构。
+
+    随着计算技术逐步向 MIMD（多指令流多数据流）分类靠拢，新的类别也被引入：
+
+    SPMD（单程序多数据流）
+
+    MPMD（多程序多数据流）
 3. Things are more important than performance
     - Correctness of code and signal
     - Clarity of code and architecture
@@ -1222,17 +1341,63 @@
     - Modularity of code and components
     - Readability of code and hardware documentation
     - Compatibility of code and hardware
+- 3. 比性能更重要的事情
+    代码和信号的正确性
+
+    代码与架构的清晰性
+
+    代码与设备的可靠性
+
+    代码与组件的模块化
+
+    代码与硬件文档的可读性
+
+    代码与硬件的兼容性
 4. x-windows forwarding
     - allows you to start up a remote application (on Spartan) but forward the display to your local machine.
+- 4. X-Windows 转发
+  
+    允许你在远程系统（如 Spartan）上启动一个应用程序，但将图形界面转发显示到你的本地电脑上。
+
+
 5. Why Module?
     - have the advantages of being shared with many users on a system and easily allowing multiple installations of the same application but with different versions and compilation options. Sometimes users want the latest and greatest of a particular version of an application for the feature-set they offer. In other cases, such as someone who is participating in a research project, a consistent version of an application is desired. In both cases consistency and therefore reproducibility is attained.
+  - 5. 为什么要使用 Module？
+    它可以使系统上的多个用户共享相同的软件，并轻松实现同一个应用程序的多个版本与编译选项共存。
+
+    有些用户希望使用最新版本以获得新功能，而另一些（如参与研究项目的用户）则希望使用固定版本以保证结果一致。
+
+    在这两种情况下，都可实现一致性与可重现性。
+
+
 - Why performance and scale matters, and why it should matter to you.
 - An introduction to Spartan, University of Melbourne's HPC/cloud hybrid system
 - Logging in, help, and environment modules.
 - Job submission with Slurm workload manager; simple submissions, multicore, multi-node, job arrays, job dependencies, interactive jobs.
 - Parallel programming with shared memory and threads (OpenMP) and distributed memory and message passing (OpenMPI)
 - Tantalising hints about more advanced material on message passing routines.
+- 其他主题
+    为什么性能与可扩展性很重要，以及为什么它对你也重要。
 
+    介绍 Spartan：墨尔本大学的 HPC / 云混合系统。
+
+    如何登录系统、获取帮助以及管理环境模块。
+
+    使用 Slurm 工作负载管理器提交作业：
+
+    简单作业
+
+    多核、多节点
+
+    作业数组
+
+    作业依赖关系
+
+    交互式作业
+
+    使用 OpenMP（共享内存与线程）与 OpenMPI（分布式内存与消息传递）进行并行编程。
+
+    关于更高级消息传递操作的**“吊胃口”式介绍**。
 ### past exam
 - > [2015 Q4] B) Explain the role of a job scheduler on a high performance computing system like the University of Melbourne Edward cluster. What commands can be used to influence the behavior of the job scheduler in supporting parallel jobs running on single or multiple nodes (servers)? [3]
     - you can specify wall time, number of processess, number of threads in slurm scripts 
