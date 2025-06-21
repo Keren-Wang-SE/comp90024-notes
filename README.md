@@ -1276,8 +1276,11 @@ Master-Worker / Task-Farming（主从任务农场模型）
 数据的划分与分析可以通过多种方式完成
 
 一个被广泛采用的模型为：MapReduce
+
+
+
 ## Week4 - The Spartan HPC System
-- Some background on supercomputing, high performance computing, parallel computing, research computing (they're not the same thing!).
+- Some background on **supercomputing, high performance computing, parallel computing, research computing**(they're not the same thing!).
     - Supercomputer
         - Any single computer system that has exceptional processing power for its time.
     - Clustered computing
@@ -1288,7 +1291,7 @@ Master-Worker / Task-Farming（主从任务农场模型）
         - It is any computer system whose architecture allows for above average performance
         - The clustered HPC is the most efficient, economical, and scalable method, and for that reason it **dominates supercomputing**.
     - Parallel and Research Programming
-        - Parallel computing refers to the submission of jobs or processes over multiple processors and by splitting up the data or tasks between them
+        - **Parallel computing refers to the submission of jobs or processes over multiple processors and by splitting up the data or tasks** between them
             - With a cluster architecture, applications can be more easily parallelised across them.
         - Research computing is the software applications used by a research community to aid research.
             - challenge: This skills gap is a major problem and must be addressed because as the volume, velocity, and variety of datasets increases then researchers will need to be able to process this data.
@@ -1313,7 +1316,7 @@ Master-Worker / Task-Farming（主从任务农场模型）
 
     并行与科研计算（Parallel and Research Programming）
 
-    并行计算指的是将作业或进程提交到多个处理器，并将数据或任务分割给它们并行执行。
+    **并行计算指的是将作业或进程提交到多个处理器，并将数据或任务分割给它们并行执行。**
 
     使用集群架构时，应用程序更容易进行并行化。
 
@@ -1363,11 +1366,11 @@ Master-Worker / Task-Farming（主从任务农场模型）
 5. Why Module?
     - have the advantages of being shared with many users on a system and easily allowing multiple installations of the same application but with different versions and compilation options. Sometimes users want the latest and greatest of a particular version of an application for the feature-set they offer. In other cases, such as someone who is participating in a research project, a consistent version of an application is desired. In both cases consistency and therefore reproducibility is attained.
   - 5. 为什么要使用 Module？
-    它可以使系统上的多个用户共享相同的软件，并轻松实现同一个应用程序的多个版本与编译选项共存。
+    它可以使系统上的多个用户**共享相同的软件**，并轻松实现同一个应用程序的**多个版本与编译选项共存**。
 
     有些用户希望使用最新版本以获得新功能，而另一些（如参与研究项目的用户）则希望使用固定版本以保证结果一致。
 
-    在这两种情况下，都可实现一致性与可重现性。
+    在这两种情况下，都可实现**一致性与可重现性**。
 
 
 - Why performance and scale matters, and why it should matter to you.
@@ -1398,6 +1401,59 @@ Master-Worker / Task-Farming（主从任务农场模型）
     使用 OpenMP（共享内存与线程）与 OpenMPI（分布式内存与消息传递）进行并行编程。
 
     关于更高级消息传递操作的**“吊胃口”式介绍**。
+
+module help
+显示所有可用的选项、子命令和参数。
+
+module avail
+列出所有当前可加载的模块。
+
+module whatis <modulefile>
+显示指定模块的描述信息。
+
+module display <modulefile>
+显示该模块将对环境变量做出的修改，如添加哪些路径到 PATH、MANPATH 等。
+
+module load <modulefile>
+加载一个或多个模块到当前环境（有些模块可能会自动加载其他模块）。
+
+module unload <modulefile>
+从当前环境中卸载指定模块。
+
+module switch <modulefile1> <modulefile2>
+卸载模块 modulefile1 并加载模块 modulefile2。
+
+module purge
+清除当前环境中所有已加载的模块。
+
+module spider（Lmod 系统特有，如 Spartan 使用）
+搜索所有可用的模块，包括不在当前模块路径中的，并提供描述信息。
+
+
+- **Operation on sparton**
+  - Submitting and running jobs is a relatively straight-forward process consisting of:
+    - 1) Setup and launch
+    - 1) Job Control, Monitor results
+    - 1) Retrieve results and analyse.
+- Instructions
+    - squeue | less 查看作业队列
+    - sbatch [jobscript] 提交作业脚本
+    - squeue -j [jobid] 查看作业状态（或者scontrol show job [jobid]）
+    - scancel [jobid] 取消作业
+    - Example:
+ '''
+ # !/bin/bash 
+ # SBATCH --partition=cascade partition指定分区
+ # SBATCH --nodes=2           nodes命令指定节点数
+ # SBATCH --ntasks-per-node=4 ntasks-per-node 每个节点任务数n任务数-每隔-节点
+ # SBATCH --time=01:00:00     time指定时间
+ module load mpi4py/3.1.4-Python-3.1.3    module load加载所需软件模块
+ srun my-mpi-app 或 srun python my-app.py my-app.ndjson 运行脚本
+ ''' 
+ 提交到调度器指令
+ '''
+ sbatch myjob.slurm
+ '''
 ### past exam
 - > [2015 Q4] B) Explain the role of a job scheduler on a high performance computing system like the University of Melbourne Edward cluster. What commands can be used to influence the behavior of the job scheduler in supporting parallel jobs running on single or multiple nodes (servers)? [3]
     - you can specify wall time, number of processess, number of threads in slurm scripts 
