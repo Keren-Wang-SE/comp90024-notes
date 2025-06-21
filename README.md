@@ -1401,34 +1401,34 @@ Master-Worker / Task-Farming（主从任务农场模型）
     使用 OpenMP（共享内存与线程）与 OpenMPI（分布式内存与消息传递）进行并行编程。
 
     关于更高级消息传递操作的**“吊胃口”式介绍**。
-
+'''
 module help
 显示所有可用的选项、子命令和参数。
 
 module avail
-列出所有当前可加载的模块。
+列出所有当前可加载的模块。 module avail
 
 module whatis <modulefile>
-显示指定模块的描述信息。
+显示指定模块的描述信息。   module whatis <>
 
 module display <modulefile>
-显示该模块将对环境变量做出的修改，如添加哪些路径到 PATH、MANPATH 等。
+显示该模块将对环境变量做出的修改，如添加哪些路径到 PATH、MANPATH 等。module display <>
 
 module load <modulefile>
-加载一个或多个模块到当前环境（有些模块可能会自动加载其他模块）。
+加载一个或多个模块到当前环境（有些模块可能会自动加载其他模块）。module load
 
 module unload <modulefile>
-从当前环境中卸载指定模块。
+从当前环境中卸载指定模块。 module unload
 
 module switch <modulefile1> <modulefile2>
-卸载模块 modulefile1 并加载模块 modulefile2。
+卸载模块 modulefile1 并加载模块 modulefile2。 module switch
 
 module purge
-清除当前环境中所有已加载的模块。
+清除当前环境中所有已加载的模块。 module purge
 
 module spider（Lmod 系统特有，如 Spartan 使用）
-搜索所有可用的模块，包括不在当前模块路径中的，并提供描述信息。
-
+搜索所有可用的模块，包括不在当前模块路径中的，并提供描述信息。 
+'''
 
 - **Operation on sparton**
   - Submitting and running jobs is a relatively straight-forward process consisting of:
@@ -1443,35 +1443,107 @@ module spider（Lmod 系统特有，如 Spartan 使用）
     - Example:
  '''
  # !/bin/bash 
- # SBATCH --partition=cascade partition指定分区
+ # SBATCH --partition=cascade partition指定分区 或者 #SBATCH -p physical
  # SBATCH --nodes=2           nodes命令指定节点数
- # SBATCH --ntasks-per-node=4 ntasks-per-node 每个节点任务数n任务数-每隔-节点
- # SBATCH --time=01:00:00     time指定时间
+ # SBATCH --ntasks-per-node=4 ntasks-per-node 每个节点任务数n任务数-每隔-节点 MPI指令
+ # SBATCH --cpus-per-node=8   OPENMP指令
+ # SBATCH --time=01:00:00     wall time指定时间 
+ # SBATCH --mem-per-cpu=2G       每个任务2G
  module load mpi4py/3.1.4-Python-3.1.3    module load加载所需软件模块
+
  srun my-mpi-app 或 srun python my-app.py my-app.ndjson 运行脚本
  ''' 
+
  提交到调度器指令
+
  '''
  sbatch myjob.slurm
  '''
+
+**作业数组（batch arrays）和作业依赖（batch dependencies）**
+
+一个典型的例子是对多个数据集执行相同的任务。下面的示例提交了 10 个批处理作业，myapp 分别处理数据集 dataset1.csv、dataset2.csv，…… 一直到 dataset10.csv
+
+'''
+# SPATCH --array = 1-10
+myapp ${SLURM_ARRAY_TASK_ID}.csv
+spatch --dependency=afterok:myfirstjobid mysecondjobid  `after`, `afterok`, `afternotok`, `before`, `beforeok`, `beforenotok`
+一个依赖于从上一个的结果
+'''
+- 对于实时交互式操作，可以在命令行中直接指定资源请求，从而启动一个交互式作业（interactive job）。这会将用户分配到一个计算节点上。
+
+    这种方式通常用于以下情况：
+
+    - 用户希望运行一个大型脚本（不应在登录节点上运行）；
+
+    - 用户希望测试或调试作业。
+'''
+sinteractive --nodes=1 --ntasks-per-node=4
+'''
+
+- OpenMP（Open Multi-Processing） 是一种多线程编程的实现方式。它是一个应用程序接口（API），提供了一组用于多线程、共享内存并行编程的编译指令。
+- 只能运行在单个计算节点（共享内存系统）上，不能用于分布式内存系统；它基于线程，而不是基于消息传递（message passing）
+
+- MPI: 多个处理器通过公共通信网络传递消息，协同解决问题。这种灵活的架构克服了串行瓶颈
+- OPENMP是多线程，MPI是多进程；OPENMP是共享内存，MPI是分布式内存。后者通过消息传递，前者通过共享变量和同步
+
 ### past exam
 - > [2015 Q4] B) Explain the role of a job scheduler on a high performance computing system like the University of Melbourne Edward cluster. What commands can be used to influence the behavior of the job scheduler in supporting parallel jobs running on single or multiple nodes (servers)? [3]
     - you can specify wall time, number of processess, number of threads in slurm scripts 
     - and job scheduler schedule you job depend on theses
     - wall time is a massive influence on this
         - If you give a small wall time, the scheduler might schedule faster for you
+- [2015 Q4] B) 说明作业调度器在类似墨尔本大学 Edward 集群这样的高性能计算系统中的作用。可以使用哪些命令来影响调度器对在单节点或多节点（服务器）上运行的并行作业的调度行为？[3]
+
+    你可以在 Slurm 脚本中指定 wall time（预计运行时间）、进程数量、线程数量
+
+    作业调度器会根据这些参数安排你的作业
+
+    wall time 对调度影响很大
+
+    如果你设置了较短的 wall time，调度器可能会更快安排运行
+
 - > [sample Q5] B) The actual performance as experienced by users of shared-access HPC facilities such as the Edward cluster at the University of Melbourne can vary – where here performance can be considered as the throughput of jobs, i.e. from the time of first job submission to the time of last job completion. Explain why this can happen. [2]
     - Stuck in queue
     - Overall usage of facility (some nodes can be super busy)
         - e.g.: I/O or node load
     - not all nodes are identical
     - the nature of the application itself
+- [sample Q5] B) 在像墨尔本大学 Edward 集群这样的共享访问 HPC 系统中，用户实际体验到的性能（例如作业的吞吐量，即从提交第一个作业到最后一个作业完成的时间）可能会有所不同。请解释为什么会发生这种情况。[2]
+
+    作业可能会长时间排队
+
+    整体资源使用率高（某些节点可能特别繁忙）
+
+    例如：I/O 压力或节点负载高
+
+    并非所有节点都是完全相同的
+
+    应用程序本身的特性也会影响运行效率
+
+
+
 - > [sample Q5] C) Explain how the Edward cluster has been set up to minimize this. [2]
     - Stuck in queue: Multiple queues dedicated to certain jobs
         - e.g.: Cloud, physical, ...
     - Overall usage of facility (some nodes can be super busy): Queueing system to only schedule jobs when resources free
         - (avoid starvation/blocking of system by users with large reservation demands for their jobs)
     - Modules set uo with main libraries installed
+- [sample Q5] C) 请解释 Edward 集群是如何设置来尽量减少上述情况的。[2]
+
+    排队等待：有多个队列专门用于特定类型的作业
+
+    例如：Cloud 队列、Physical 队列等
+
+    整体资源使用率：排队系统只在资源空闲时安排作业运行
+
+    避免因某些用户大规模资源申请而导致其他用户作业饿死或被阻塞
+
+    模块系统配置好了主要的库和应用，用户可直接使用
+
+
+
+
 - > [sample Q5] D) Explain what users can do to optimize their throughput (use) of the Edward cluster. [2]
     - wall time choices (minimal necessary)
         - If too large, then the job might be queued in a longer time it actually needs
@@ -1479,6 +1551,22 @@ module spider（Lmod 系统特有，如 Spartan 使用）
     - avoid demanding large scale resource
     - Load right modules
     - benchmark small data then scale up to appropriate large value
+ - [sample Q5] D) 用户如何优化他们在 Edward 集群上的吞吐量（使用效率）？[2]
+
+    合理设置 wall time（尽量只设置实际需要的时间）
+
+        - 时间过长：作业排队等待时间可能比实际运行时间还长
+
+        - 时间过短：作业可能在完成前被系统终止
+
+    避免一次性请求过多资源
+
+    加载正确的模块
+
+    先用小数据集做基准测试，再根据情况扩展到大数据集
+
+
+
 - > [sample Q5] E) Describe some of the challenges with application benchmarking on HPC facilities. [2]
     - Stuck in queue for a long time
     - Shared facility is not just for you. Thus, can't guarantee runs the same results for same application
@@ -1486,12 +1574,31 @@ module spider（Lmod 系统特有，如 Spartan 使用）
         - different alogrithm implementation different performance
     - use Linpack which is a fixed set of algorithms that doesn't reflect real world apps
         - e.g.: Twitter analytics
+
+- [sample Q5] E) 在 HPC 系统上进行应用程序基准测试会面临哪些挑战？[2]
+
+    作业可能会在队列中等待很长时间
+
+    这是共享平台，不是你一个人在用，因此无法保证每次运行结果都完全一致
+
+    基准测试本身就很难做
+
+        - 不同算法的实现会导致性能不同
+
+    有些人用 Linpack 测试，但它是一组固定的算法，不能代表真实应用的场景
+
+        - 例如：做 Twitter 数据分析时就不适用
+
 - > [2014 Q3, 2015 Q4 C [1]] B) What features does the Edward HPC facility offer to allow utilization of multiple servers (nodes)? [2]
     - firstly, they exist
     - secondly, you can specify your slurm scripts, you can specify the cloud resources you need (nodes/threads/cores). allows you to express these
-- > [2014 Q3] C) Why is the accuracy of the wall time estimate important to Edward end users? [2]
-    - If too large, then the job might be queued in a longer time it actually needs
-    - If too small, then the job might be terminated before it finishes
+- [2014 Q3, 2015 Q4 C [1]] B) Edward HPC 系统提供了哪些功能来支持使用多个服务器（节点）？[2]
+
+    首先，它确实配备了多个节点
+
+    其次，你可以在 Slurm 脚本中指定资源，例如云资源、节点数量、线程数、CPU 核数等，这样调度系统就可以据此分配任务
+
+  
 - > [2015 Q4] A) Explain the following terms in the context of high performance computing.
     - > c. Wall-time [1]
         - the time limit when you submit job that you think the job will finish by
@@ -1506,6 +1613,123 @@ Cloud computing is a model for enabling ubiquitous, convenient, on-demand networ
     | pro     | 1. **Control**<br>2. **Consolidation of resources**<br>3. **Easier to secure** - easy to setup firewall<br>4. **More trust**                                                                                                 |           | 1. Utility computing<br>2. **Can focus on core business** - no need to care infrasture or be a devop<br>3. Cost-effective - use as much as you need<br>4. “Right-sizing”<br>5. Democratisation of computing<br> | 1. **Cloud-bursting** - Use private cloud, but burst into (突然变成) public cloud when needed (What is hybrid cloud)                                                                                                        |
     | con     | 1. Relevance to core business?<br>e.g. Netflix to Amazon<br>2. Staff/management overheads - need devop<br>3. Hardware obsolescence - need to refesh hardware<br>4. Over/under utilisation challenges - recycle resources<br> |           | 1. **Security** - people can see your sensitive data<br>2. Loss of control<br>3. **Possible lock-in** - difficult to switch Azure if using AWS<br>4. Dependency of Cloud provider continued existence<br>       | 1. How do you move data/resources when needed?<br>2. How to decide (in real time?) what data can go to public cloud?<br>3. Is the public cloud compliant with PCI-DSS (Payment Card Industry – Data Security Standard)?<br> |
     | example |                                                                                                                                                                                                                              |           |                                                                                                                                                                                                                 | Eucalyptus, VMWare vCloud Hybrid Service                                                                                                                                                                                    |
+
+- Public cloud:
+  - Pros
+  – Utility computing
+  – Can focus on core business
+  – Cost-effective
+  – “Right-sizing”
+  – Democratisation of computing
+  - Cons
+  – Security
+  – Loss of control
+  – Possible lock-in
+  – Dependency of Cloud provider continued existence
+- Private Cloud:
+  - Pros
+  – Control
+  – Consolidation of resources
+  – Easier to secure
+  – More trust
+  - Cons
+  – Relevance to core business?
+      - e.g., Netflix ->Amazon
+  – Staff/management overheads
+  – Hardware obsolescence
+  – Over/under utilisation challenges
+  – (Effort and cost of establishing a data centre)
+
+- Hybrid Clouds
+    - Pros
+        – Cloud-bursting
+            - Use private cloud, but burst into public cloud when
+            needed
+    - Cons
+    - How do you move data/resources when needed?
+    - How to decide (in real time?) what data can go to public
+    cloud?
+    - Short term need can be much more expensive
+    - Is the public cloud compliant with PCI-DSS (Payment
+    Card Industry – Data Security Standard)?
+    - Examples
+    – Eucalyptus, VMWare Cloud Foundation (vSphere)
+
+☁️ 公有云（Public Cloud）
+
+✅ 优点：
+
+按需计费（Utility computing）：根据使用多少资源来计费，灵活高效
+
+聚焦核心业务：不需要自己维护硬件，可以专注于自身的业务发展
+
+成本效益高：无需前期投入大量硬件资源，适合中小企业
+
+资源按需匹配（Right-sizing）：可根据实际需求自动调整资源规模
+
+计算资源大众化：让所有人都能接触到强大计算力，推动创新
+
+❌ 缺点：
+
+安全性问题：数据和服务运行在第三方平台上，存在安全隐忧
+
+控制权缺失：企业无法完全掌控底层硬件和架构
+
+可能存在供应商绑定（lock-in）：系统高度依赖某家云服务商
+
+依赖云提供商的持续运营：一旦云厂商出问题，业务可能受影响
+
+🔒 私有云（Private Cloud）
+
+✅ 优点：
+
+完全掌控：企业自己管理云平台，数据和系统在自己控制下
+
+资源整合：可集中管理企业内部的计算资源
+
+更容易实现安全策略：网络和系统由内部团队设定和监控
+
+更高的信任度：企业员工和管理层通常更信任私有部署
+
+❌ 缺点：
+
+是否与核心业务相关？（如 Netflix 最终选择使用亚马逊公有云）
+
+人力和管理成本：需要配备专业的 IT 团队进行维护
+
+硬件老化问题：需要定期更换服务器和设备
+
+资源配置难题：容易出现资源过剩或不足的情况
+
+建立数据中心的成本和复杂度：基础设施投入大，部署周期长
+
+🌤️ 混合云（Hybrid Cloud）
+
+✅ 优点：
+
+云突发（Cloud-bursting）能力：
+
+平时使用私有云，有高峰需求时自动扩展到公有云
+
+实现资源的灵活调度与成本优化
+
+❌ 缺点：
+数据/资源迁移难题：在需要时如何快速、可靠地迁移到公有云？
+
+实时决策困难：如何实时决定哪些数据可以进入公有云？
+
+短期使用代价高：突发性资源可能比长期租用更贵
+
+合规问题：公有云是否符合如 PCI-DSS（支付卡行业数据安全标准）等法规？
+
+💡 混合云平台示例：
+Eucalyptus
+
+VMWare Cloud Foundation（vSphere）
+
+
+
+
 
 2. Delivery Models
 - responsibilities:
@@ -1562,6 +1786,232 @@ Cloud computing is a model for enabling ubiquitous, convenient, on-demand networ
 - > [2017 Q6] b. What are the implications of availability zones with regards to virtual machine instance creation and data volumes offered by NeCTAR? [2]
     - The implications of availability zones with data volumes is that Can’t mount volumes to VMs in remote locations.
     - Instances (on Nectar) can be created in and availability zone.
+
+
+## workshop week 4: MRC Services
+- Keystone
+– Provides an authentication and authorization service for OpenStack services
+    - Tracks users/permissions
+– Provides a catalog of endpoints for all OpenStack services
+    - Each service registered during install
+– Know where they are and who can do what with them
+    - Project membership; firewall rules; image mgt; 
+– *Generic authorization system for openStack
+    - more in security lecture
+
+- Keystone
+    – 为 OpenStack 服务提供认证和授权服务
+
+    - 跟踪用户和权限
+        – 提供所有 OpenStack 服务的端点目录
+
+    - 每个服务在安装时都会注册
+        – 知道每个服务的位置以及谁可以对其进行哪些操作
+        - 项目成员关系；防火墙规则；镜像管理；
+
+    -  OpenStack 的通用授权系统
+
+
+
+- Horizon
+    – Provides a web-based self-service portal to interact with underlying OpenStack services, such as launching an instance, assigning addresses and configuring access controls.
+    – Based on Python/Django web application
+    – Mod_wsgi
+    - Apache plug realising web service gateway interface
+    – Requires Nova, Keystone, Glance, Neutron
+    – Other services optional…
+
+- Horizon(Dashboard )
+    – 提供一个基于 Web 的自助服务门户，用于与底层 OpenStack 服务交互，例如启动实例、分配地址和配置访问控制。
+    – 基于 Python/Django 的 Web 应用程序
+    – 使用 Mod_wsgi Apache 插件，用于实现 Web 服务网关接口（WSGI）
+    – 依赖 Nova、Keystone、Glance、Neutron 服务
+    – 其他服务为可选项…
+
+
+
+- Nova
+    – Manages the lifecycle of compute instances in an OpenStack environment
+    – Responsibilities include spawning, scheduling anddecommissioning of virtual machines on demand
+    – Virtualisation agnostic
+        - Libvirt
+    – Open-source API, daemon and tools for managing platform virtualisation including support for Kernel based virtual machine (KVM), Quick Emulator (QEMU), Xen, Lightweight,Linux Container System (LXC)
+    - XenAPI, Hyper-V, VMWare ESX,…
+    - Docker
+    – API
+        - Nova-api - accepts/responds to end user API calls; supports openStack Compute & EC2 & admin APIs
+    – Compute Core
+        - Nova-compute - Daemon that creates/terminates VMs through hypervisor APIs
+        - Nova-scheduler - schedules VM instance requests from queue and determines which server host to run
+        - Nova-conductor - Mediates interactions between compute services and other components, e.g. image database
+    – Networking
+      - Nova-network - Accepts network tasks from queue and manipulates network, e.g. changing IPtable rules
+    – Image Mgt, Client Tools, …
+
+- Nova
+    – 管理 OpenStack 环境中计算实例的生命周期
+    – 职责包括按需启动、调度和注销虚拟机
+    – 与虚拟化平台无关
+    - 支持 Libvirt
+    – 提供开源的 API、守护进程和工具，用于管理平台虚拟化，支持如内核虚拟机（KVM）、Quick Emulator（QEMU）、Xen、轻量级 Linux 容器系统（LXC）
+
+    - 支持 XenAPI、Hyper-V、VMWare ESX 等
+
+    - 也支持 Docker
+    - 
+    – API
+    nova-api：接受并响应用户的 API 请求，支持 OpenStack Compute API、EC2 API 及管理员 API
+
+    – 计算核心
+      - nova-compute：守护进程，通过 hypervisor API 创建和终止虚拟机
+      - nova-scheduler：从任务队列中调度虚拟机请求，并决定在哪个服务器主机上运行
+      - nova-conductor：协调计算服务与其他组件之间的交互，例如镜像数据库
+    – 网络
+
+    nova-network：接受网络任务队列的请求并执行相关网络操作，例如修改 IP 表规则
+    – 镜像管理、客户端工具等
+
+- Swift(Object Storage)
+    – Stores and retrieves arbitrary unstructured data objects via RESTful API, e.g. VM images and data
+
+    • Not POSIX (atomic operations); eventual consistency
+
+    – Fault tolerant with data replication and scale-out architecture.
+
+    • Available from anywhere; persists until deleted
+
+    • Allows to write objects and files to multiple drives, ensuring the data is replicated across a server cluster
+
+    – Can be used with/without Nova/compute
+
+    – Client; admin support
+
+    • e.g. Swift client – allows users to
+
+    submit commands to ReST API through command line clients to configure/ connect object storage to VMs
+
+- Swift
+    – 通过 RESTful API 存储和检索任意非结构化数据对象，例如虚拟机镜像和数据
+
+    • 不支持 POSIX（原子操作）；采用最终一致性模型
+
+    – 具有容错能力，采用数据复制和横向扩展架构
+
+    • 可从任何地点访问；数据会一直保存，直到被删除
+
+    • 允许将对象和文件写入多个磁盘，确保数据在服务器集群中被复制
+
+    – 可以配合或不配合 Nova/计算服务使用
+
+    – 支持客户端与管理员操作
+
+    • 例如 Swift 客户端：允许用户通过命令行客户端向 REST API 提交命令，以配置/连接对象存储至虚拟机
+
+Cinder
+    – Provides persistent block storage to virtual
+    machines (instances) and supports creation and
+    management of block storage devices
+    – Cinder access associated with a VM
+    • Cinder-api – routes requests to cinder-volume
+    • Cinder-volume – interacts with block storage service and
+    scheduler to read/write requests; can interact with
+    multiple flavours of storage (flexible driver architecture)
+    • Cinder-scheduler – selects optimal storage provider node
+    to create volumes (ala nova-scheduler)
+    • Cinder-backup – provides backup to any types of volume
+    to backup storage provider
+    – Can interact with variety of storage solutions
+
+- Cinder(block storage)
+– 为虚拟机（实例）提供持久性块存储，支持块存储设备的创建和管理
+
+– Cinder 存储与特定虚拟机关联
+
+组件包括：
+
+Cinder-api
+
+接收并将请求路由给 cinder-volume
+
+Cinder-volume
+
+与块存储服务和调度器交互，处理读/写请求；
+
+可与多种类型的存储交互（具有灵活的驱动架构）
+
+Cinder-scheduler
+
+选择最优的存储提供节点来创建卷（类似于 nova-scheduler）
+
+Cinder-backup
+
+支持将任意类型的卷备份到备份存储提供方
+
+– 可与多种存储解决方案集成
+
+
+Glance(Image Service)
+– 负责接收有关磁盘或服务器镜像及其相关元数据的请求（通常来自 Swift），并通过 Nova 实现镜像的获取与安装
+
+组件包括：
+
+Glance-api
+
+处理镜像的发现、获取与存储请求
+
+Glance-registry
+
+存储、处理并检索镜像的元数据（例如大小和类型）
+
+示例镜像类型：
+
+Fedora-CoreOS-38？
+
+NeCTAR Windows Server 2022？
+
+NeCTAR R-Studio？
+
+NeCTAR JupyterLab？
+
+我上一次成功的快照…？
+
+
+
+Neutron
+用于支持 OpenStack 服务中的网络连接
+
+提供一个 API，使用户可以定义网络及其连接方式（如交换机、路由器等）
+
+拥有可插拔架构，支持多个网络厂商和技术
+
+组件：
+
+Neutron-server：接收并路由 API 请求至相应插件进行处理
+
+管理端口，例如默认 SSH、VM 专属规则等
+
+更广泛地配置可用区域的网络，如子网、DHCP 等
+
+Heat
+是一个模板驱动的服务，用于管理部署在 OpenStack 上的应用的生命周期
+
+Stack（堆栈）：表示用于创建基础设施和所需资源的模板及执行流程
+
+可与自动化工具集成，例如：
+
+Chef
+
+Puppet
+
+Ansible
+
+
+
+
+
+
+
+
 
 
 ## Workshop week5: Auto-Deployment -- Ansible
@@ -2211,6 +2661,11 @@ Your answer should cover challenges with data distribution, traditional database
             - Therefore, it makes sense to use DBMSs that are built upon data models that are not relational (relational model: tables and relationships amongst tables).
         - Relational database finds it challenging to handle such huge data volumes. To address this, RDBMS added more central processing units (or CPUs) or more memory to the database management system to scale up vertically
         - Big data is generated at a very high velocity. RDBMS lacks in high velocity because it’s designed for steady data retention rather than rapid growth
+
+
+
+
+
 
 ## Workshop week6: Containerization and docker
 ### Virtualization vs Containerization
