@@ -3952,6 +3952,58 @@ Terminology
     4. Make sure rollback checkbox is marked, so if anything goes wrong, all partially created resources get dumped too
     5. Wait for the magic to happen! 
 
+### 往年考试题目翻译
+
+> [样题 Q3 A] NeCTAR 研究云基于 OpenStack 技术。请描述以下 OpenStack 组件的作用与特性：
+
+- **Nova [1]**  
+  - 管理 OpenStack 环境中计算实例的生命周期  
+  - 负责按需处理虚拟机，包括创建、调度和销毁等操作  
+
+- **Horizon [1]**  
+  - 提供基于 Web 的自助门户，用户可与底层 OpenStack 服务交互，例如启动实例、分配 IP 地址以及配置访问控制等  
+
+- **Heat [1]**  
+  - 通过模板驱动的服务，用于管理部署在 OpenStack 上的应用程序生命周期  
+
+- **Glance [1]**  
+  - 接收磁盘或服务器镜像及其相关元数据的请求（来自 **Swift**）  
+  - 通过 **Nova** 检索并安装镜像  
+
+- **Swift [1]**  
+  - 通过 ReSTful API 存储和检索任意非结构化数据对象，例如：虚拟机镜像和数据文件  
+
+- **Keystone [1]**  
+  - 为 OpenStack 服务提供身份认证和授权服务  
+  - 跟踪用户及其权限  
+  - 提供所有 OpenStack 服务的端点目录  
+
+- **Neutron [1]**  
+  - 为 OpenStack 服务提供网络支持  
+  - 提供 API，让用户能够定义网络及其连接，例如交换机、路由器等  
+  - 管理端口，例如默认 SSH、虚拟机专属规则等  
+
+---
+
+> [样题 Q3 B] 描述上述组件如何协作，使研究人员能够通过非公开 NeCTAR 云镜像（例如用户创建的快照）创建虚拟机实例。[3分]
+
+1. 通过 Keystone 进行身份认证，使用 unimelb 账号和密码登录 MRC；Keystone 身份认证使我们能够访问系统中的其他组件，让系统知道是我们在使用它们。  
+2. Nova-compute 守护进程通过 hypervisor API 创建/销毁虚拟机  
+3. Nova-scheduler 从请求队列中调度虚拟机实例请求，并决定在哪台服务器主机上运行实例  
+4. Nova-conductor 协调计算服务与其他组件之间的交互，例如连接镜像数据库  
+5. 通过 Swift/Glance 查找所需资源  
+6. 在目标机器上准备好虚拟机实例  
+
+---
+
+> 描述使用 OpenStack Heat 服务将 SaaS 解决方案部署到云上的方法。[2分]
+
+1. 根据部署需求创建模板文件  
+2. 提供环境详情（如密钥文件名称、镜像 ID 等）  
+3. 为你的栈（stack）选择一个名称，并确认各项参数  
+4. 勾选“回滚”选项，这样如果部署失败，系统会自动删除所有已部分创建的资源  
+5. 然后静待“魔法”发生（即 Heat 自动完成部署）
+
 
 ## Week 8.3 - Serverless (Function as a Service (FaaS))
 1. Why Functions?
@@ -4022,6 +4074,231 @@ Terminology
     - proprietary FaaS services v.s. open-source FaaS frameworks
         - open-source FaaS frameworks can be deployed on your cluster, peered into, disassembled, and improved by you.
 
+### 1. 为什么使用函数（Functions）？
+- 在计算机科学中，函数通常是指一个接受参数并返回结果的代码片段
+- 函数是函数式编程的基础概念——这是最古老的编程范式之一
+- 那么，为什么在 FaaS 中使用函数呢？
+
+在无服务器计算中，函数具备以下特性：
+#### - side-effect free function 无副作用函数
+- **什么是副作用？**  
+  - 不改变系统状态的函数就是无副作用的函数  
+    - 例：一个函数接收一张图片并返回缩略图  
+  - 改变系统状态的函数则是有副作用的  
+    - 例：一个函数将缩略图写入文件系统
+
+- **无副作用如何有利于并行执行？**  
+  - 无副作用的函数可以并行运行，并且在相同输入下能保证返回相同的输出
+
+- **无副作用对 FaaS 的意义？**  
+  - 在较复杂的系统中，副作用几乎不可避免  
+  - 因此需要考虑如何让具有副作用的函数在并行执行时仍然安全可靠，而这是 FaaS 环境中的常见需求
+
+#### - stateful/stateless function 有状态和无状态函数
+- **什么是无状态？**
+    - 有副作用的函数中有一类是有状态的
+    - **有状态函数**：输出依赖于内部存储的信息，输入无法完全预测输出，**不适合FaaS**  
+      - 例：一个函数将商品添加到购物车，并内部保存该信息。例如保存苹果进去，内部变成苹果；再输入香蕉，变成苹果和香蕉
+    - **无状态函数**：不在内部保存信息  
+      - 例：一个函数将商品添加到保存在数据库中的购物车，而不是保存在内部变量中 —— 这使函数变得无状态，但仍然有副作用
+    - **无副作用 不等于 无状态，无副作用函数不仅仅不保存状态，还不影响外部世界**
+
+- **无状态性对 FaaS 的重要性？**  
+  - 因为相同函数会以多个实例运行，不能保证用户总是连接到同一个函数实例
+
+
+#### - 同步/异步函数
+- **与 FaaS 的关系：**
+  - **默认情况下，FaaS 中的函数是同步执行的**，即立即返回结果  
+  - 某些函数运行时间较长，可能导致超时和客户端连接阻塞，故应转换为异步函数  
+    - 可通过发布/订阅（pub/sub）模式和队列系统实现异步处理
+
+- **它们是如何工作的？**
+  - 同步函数：立即返回结果
+  - 异步函数：返回一个状态码表示函数已开始执行，并在完成时触发事件通知客户端
+
+#### - 短暂函数 Ephemeral Functions
+- 执行时间很短的函数
+
+#### - 这些特性使函数特别适合：
+  - 并行执行  
+  - 快速的扩展与收缩  
+  - 无副作用、短暂、无状态的函数最适合用于 FaaS
+
+---
+
+### 2. 函数与 FaaS 的关系
+- 副作用
+- 有状态 / 无状态
+- 同步 / 异步函数
+
+---
+
+### 3. 什么是函数即服务（FaaS）？
+- FaaS 也被称为无服务器计算（Serverless）
+- FaaS 是微服务架构的一种极端形式
+- 无服务器计算的理念是：**开发者专注于业务逻辑，无需关心基础设施（尤其是扩容/缩容）**
+  - 所以，“Serverless”更像是“看不见服务器”而非“没有服务器”
+
+- **FaaS 提供的能力：**
+  - 添加、删除、更新、执行函数  
+  - 函数可以自动伸缩
+
+---
+
+### 4. 为什么我们需要 FaaS？
+- 简化部署  
+  - 服务提供商负责管理底层基础设施
+- 降低计算成本  
+  - 只为函数执行期间计费
+- 降低应用复杂性  
+  - 通过松耦合架构实现
+
+---
+
+### 5. FaaS 应用场景
+- 函数由事件触发
+- 函数之间可以互相调用
+- 函数与事件结合可以构建完整软件应用
+- 将事件驱动与函数结合类似于构建用户界面应用：用户操作触发特定代码的执行
+
+- 例如：常见的 FaaS 服务与框架
+  - 亚马逊 AWS Lambda
+  - Google Cloud Functions
+  - 微软 Azure Functions
+
+- **专有 FaaS 服务 vs 开源 FaaS 框架**
+  - 开源框架可以部署在自己的集群中，供你研究、拆解和改进
+
+
+#### - 单体应用（Monolithic Application）
+
+- 一个标准的 Web 应用可以如下满足需求：
+
+    一个定时器调用 API 的采集端点，用于从 BoM（气象局）和空气质量监测站采集数据
+
+    采集到的数据被转换成统一格式
+
+    转换后的数据被插入到 ElasticSearch 中
+
+    另一个端点允许客户端应用请求平均温度（通过 ElasticSearch 查询计算）
+
+- 单体应用的特点：
+
+    - 应用只能垂直扩展（使用更强大的虚拟机），无法水平扩展到集群的其他节点 **vertically scale**
+
+    - 所有组件在运行时都同时加载到内存中，占用比实际需要更多的资源 **all parts load in the same time**
+
+    - 如果应用的某个部分发生严重故障（如 Java 内存溢出），会导致整个应用崩溃 **one part malfunction, bring down whole app**
+
+    - 所有组件高度耦合（大多用相同语言开发），因此对某部分代码的更改可能引发一连串连锁反应（例如升级某个库）**components tightly coupled**
+
+- 无服务器（Serverless）版本的应用
+
+    每项功能都由一个独立的函数提供 one functionality <- one function
+
+    大多数函数之间通过异步消息队列通信，而不是直接通信  communicate via message queue
+
+    函数仅在需要时才加载 load only  when need
+
+    **某个函数出现故障时，不会影响整个应用** one malfunction, no effect to others
+
+    可以在多个节点上部署相同函数的副本，实现水平扩展 horizontally scale
+
+    函数可以使用不同编程语言实现，仍可正常协作 different language
+
+    函数可以运行在不同的运行环境中（例如 Python 3.9 和 3.10），互不影响 run in different environment
+
+    应用整体更加易于修改、健壮、资源利用率更高 more robust , easy to change
+
+
+#### - Fission
+- Fission 的核心概念
+    - 函数（Function）：一个可以独立被触发器调用并返回结果的软件模块（在 Docker 容器中运行）
+    - 环境（Environment）：函数运行的 Docker 镜像。环境是与语言相关的，包含 HTTP 服务器和一些基础库，但可以通过包（Packages）进行自定义
+    - 包（Package）：用于自定义环境的一组文件（通常是源代码或已编译的二进制文件）
+    - 触发器（Trigger）：触发函数执行的事件，例如：
+        - HTTP 请求
+        - 定时器
+        - 队列中的消息发布
+        - Kubernetes 任务完成
+    - 路由器（Router）：负责将 HTTP 请求路由到对应函数的组件
+    - 规范文件（Specifications / Specs）：定义 Fission 应用各组件的一组 YAML 文件。与 CLI 命令相比，使用规范文件可以更轻松地部署和维护应用
+
+- 环境、包与函数（Environments, Packages, and Functions）
+    - 一个函数在 Pod 上运行，但实际上是在 Pod 的 Docker 容器 中执行的，而该容器是基于某个 Docker 镜像 构建的。
+
+    - 这个 Docker 镜像就是 Fission 中所谓的 环境（Environment）。
+
+    - 对环境的定制通过 包（Package） 来完成。
+
+    - 例如：
+
+        - Python 是一种环境（通常在 Fission 中，每种编程语言对应一个环境）
+
+        - 如果要在基础 Python 环境中添加一些库（比如 ElasticSearch 客户端），就需要 创建一个包 并将其添加到函数中，从而在创建函数时扩展该环境的功能。
+
+
+# Fission 中的函数执行器（Function Executors）
+
+Fission 以两种不同的方式执行函数：
+
+## ● PoolManager 模式 低延迟，易过载
+
+- Fission 为**每个环境管理一个 Pod 池**。 
+- 当一个函数被调用时，函数包会被加载到 Pod 中并被执行。
+- 每次只运行一个函数实例。
+- 优点：
+  - 最小化函数执行的延迟（**热启动**）。**minimum latency**
+- 缺点：
+  - 无法很好地应对高负载。**cannot hold heavy load, may be obverloaded**
+  - 虽然函数是多线程的，能够同时处理多个请求，但仍可能出现过载。
+
+## ● NewDeploy 模式
+
+- 随着负载的增加，会创建新的 Pod。
+- 优点：
+  - 允许同一个函数的多个实例同时运行，更适应高负载情况。 **better for heavy load**
+  - 额外的函数实例会根据某些指标（如 CPU 使用率）自动创建。
+- 缺点：
+  - 延迟较高（默认是**冷启动**）。
+- 为了减少延迟，可以设置 NewDeploy 执行器始终保持一个 Pod 常驻运行。
+
+> 🛠️ **默认执行器：** Fission 默认使用的是 **PoolManager** 模式。
+
+# Fission 的命令行工具（CLI）
+## ● 常见命令示例
+
+- 列出环境：`fission environment list`
+- 列出包：`fission packages list`
+- 查看日志 fission function log --name <函数名> --namespace <命名空间>
+- 调用函数 fission function test --name <函数名> --namespace <命名空间>
+- 创建函数 fission function create --name hello --env python --code hello.py
+
+
+Fission Websockets 支持
+    ● 用于长时间任务的异步通信
+    HTTP 请求是同步的，不适合长时间任务。WebSocket 提供了一个双向非阻塞通道。
+
+    示例场景：浏览器客户端发起 ML 任务
+
+    - 客户端通过 HTTP POST 请求发起任务。
+    - Fission 将任务请求写入队列，返回 HTTP 202（接受请求）。
+    - 客户端建立 WebSocket 通道。
+    - 后端 Fission 函数从队列读取并执行任务。
+    - 任务完成后，通过 WebSocket 通道返回结果。
+
+- Fission 规范（Specifications）
+    ● 为什么使用 Specs？
+
+    使用 CLI 命令逐一管理组件效率低，违背了两个云原生核心原则：
+
+    基础设施即代码（Infrastructure as Code）
+
+    声明式应用管理（Declarative Application Management）
+
+
+
 ### past exam
 - > [sample Q7] A) In the context of Cloud, what is meant by serverless computing? [1]
     - A way of developing applications as **collections of functions** that are deployed on a computing infrastructure without the need to manage it.
@@ -4044,6 +4321,38 @@ Terminology
                 - rapid scale up and scale down
         - Functions are triggered by events
         - Functions can call each other
+### 历年考题（Past Exam）
+
+> [示例题 Q7] A) 在云计算的背景下，什么是无服务器计算（serverless computing）？[1]
+
+- 一种将应用程序开发为**函数集合**的方式，这些函数部署在计算基础设施上，而**无需自行管理该基础设施**。
+
+---
+
+> [示例题 Q7] B) 请列出选择无服务器解决方案的三个好处。[3]
+
+- **更简单的部署**：服务提供商负责基础设施的管理  
+- **更低的计算成本**：仅为函数执行期间的时间付费  
+- **更低的应用复杂度**：由于其松耦合架构，简化了系统设计  
+
+---
+
+> [示例题 Q7] C) 论述函数在无服务器计算中的作用。你的回答应包括使函数适合于无服务器环境的关键属性。[3]
+
+- 无服务器应用由多个函数组成
+- 函数具有以下关键特性，使其非常适合无服务器环境：
+  - **无副作用**（free of side-effects）
+  - **短暂存在**（ephemeral）
+  - **无状态**（stateless）
+  - 这些特性使函数适用于：
+    - **并行执行**
+    - **快速扩展和收缩**
+  - 函数通过事件触发执行
+  - 函数之间可以相互调用
+
+
+
+
 
 ## Workshop week8: OpenFaaS
 ### Properties
@@ -4065,6 +4374,10 @@ Terminology
     - Every function in OpenFaaS is a Docker container, ensuring loose coupling between functions
     - When the load increases, OpenFaaS add more container executing the same function.
     - When the load decreases, OpenFaaS remove containers for the function is called less often.
+
+
+
+
 
 ## Week 9 - Big Data Analytics
 1. Why we need it?
@@ -4257,6 +4570,11 @@ Terminology
         - The driver program is hosted on the same computer that is not part of the cluster, while the cluster manager and executors are hosted on the cluster.
 - > [2017 Q2] B What is the Apache Hadoop Resilient Distributed Dataset (RDD) operation type that triggers RDD evaluations? Which operation type does not trigger RDD evaluations? [2]
     - Spark's RDDs provide two kinds of operations: transformations and actions, where only actions such as reduce or collect trigger the evaluation. So transformation does not trigger RDD evaluations.
+
+
+
+
+
 
 ## Week 10.1 – Security and Clouds
 1. Why is security so important?
@@ -4510,6 +4828,383 @@ Terminology
     - Identity Provider
         - The place you got authenticated
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 为什么我们需要大数据分析（Why we need it?）
+
+- 如果无法分析数据，那么积累大量数据就毫无意义，因此推动了大规模商业智能（BI）和更复杂的机器学习算法的发展。
+- 商业智能、机器学习、统计学和数据挖掘之间存在重叠。
+  - 为了统一，我们使用“大数据分析”（Big Data Analytics）这一通用术语。
+
+---
+
+## 什么是大数据分析（What is it?）
+
+- 商业智能、机器学习、统计学、数据挖掘等术语之间存在大量交叉和混淆。
+  - 为了简洁明了，统一使用术语 **大数据分析（Big Data Analytics）**。
+
+---
+
+## 大数据分析的例子（Examples of Analytics）
+
+- 全文搜索（Full-text searching）
+- 数据聚合（Aggregation of data）
+- 聚类分析（Clustering）
+- 情感分析（Sentiment analysis）
+- 推荐系统（Recommendations）
+
+---
+
+## 大数据分析的挑战（Challenges of Big Data Analytics）
+
+一个分析大数据的框架必须在多个节点上分布数据和处理，这意味着：
+
+- 读取和写入分布式数据集
+- 在数据节点失败时保持数据不丢失
+- 支持 MapReduce 任务的执行
+- 容错能力强：少量节点故障不会导致整个处理中断
+- 在集群中协调任务的执行
+
+
+### 大数据的四个“V”特征：
+
+- **Volume（体量）**  
+  - 没错，数据的体量（以 GB、TB、PB 等衡量）是一个标准，但不是唯一标准。 volume
+
+- **Velocity（速度）**  
+  - 指新数据被引入系统的频率，也就是数据产生和处理的速度。 frequency new data bring into 
+
+- **Variety（多样性）**  
+  - 指数据结构的多样性和复杂性。数据结构越复杂，变化的可能性越高。 variety of the data(XML,JSON,...)
+
+- **Veracity（真实性）**   the level of trust of the data.more resource,less trust
+  - 指数据准确性的可信程度（即数据来源的可靠性）。  
+    - 数据来源越多样、越非结构化，其真实性越低。  
+    - 尤其是当数据来自不同时间、不同更新频率的数据源时。
+
+> ✅ 所以，“大数据”不仅是“量大”，还包括处理速度、类型复杂和数据可信度等多维挑战。
+
+- 为什么需要数据库集群
+
+    - 分担计算负载，提升系统可用性和吞吐量。
+
+    - 存储冗余副本，实现容错和数据可靠性。
+
+## CouchDB 集群架构（CouchDB Cluster Architecture）
+
+- **所有节点同时响应请求（读写均可）**
+- **数据分片（Shards）分布在所有节点上**
+- 例如：
+  - 1 个数据库
+  - 3 个节点
+  - 4 个分片
+  - 每个分片有 2 份副本
+- 当某节点没有某个文档（例如，节点2请求分片A的文档），该节点会向其他节点（如节点1）请求该文档，并返回给客户端
+- **若某节点故障，其他两个节点继续工作，因为副本仍然存在**
+- 节点可自动增删，分片会根据节点变动自动重新平衡（但已有数据库的重新分片需手动移动分片文件或拆分/合并分片）
+
+---
+
+## PostgreSQL 联邦数据库架构（PostgreSQL Federated Database Architecture）
+
+- 这是 PostgreSQL 多种分布式数据库组织方式中的一种（例如 Citus、Postgres-XL、PL/Proxy）
+- **联邦数据库由多个分离数据库组成，对客户端表现为单一数据库**
+- **有一个入口节点（节点1）供客户端访问，其他节点上的数据只能通过节点1访问**
+- 不同数据库存储不同表，例如客户表在数据库B，发票表在数据库C
+- 当查询涉及数据库B或C的表时，PostgreSQL 的外部数据包装器（foreign data wrapper）机制允许节点1像访问本地表一样访问这些表
+- 写请求转发至相应数据库节点，事务必须在所有相关节点成功提交
+- **若某节点故障，整个集群可能停止工作（取决于故障节点及所请求数据）**
+- 注意：PostgreSQL 文档中“集群”指同一节点上的多个数据库，不同于一般意义上的多个进程合作的集群
+
+---
+
+## ElasticSearch 集群架构（ElasticSearch Cluster Architecture）
+
+- ES 主要有两种节点角色：**Master 节点和 Data 节点**（还有其他专用节点角色，本文不涉及）
+- 一个节点可以同时承担多个角色
+- 例子：4 节点 ES 集群  
+  - 1 个 Master 节点  
+  - 2 个既是 Master 候选也是 Data 节点  
+  - 1 个纯 Data 节点
+- 多个节点可拥有 Master 角色，但集群中任一时刻只有一个节点是实际 Master，其他 Master 角色节点为 Master 候选，当前 Master 故障时可接替
+- 所有节点均可作为协调节点（协调查询执行），但只有 Master 节点可创建/删除索引及调度分片迁移
+- 索引（数据库）可进行分片和复制  shards and replicate
+- 集群中的索引示例：
+  - Index1：2 个主分片 + 2 个副本分片
+  - Index2：无分片，1 个副本
+  - Index3：无分片，无副本
+- 同一节点上不能存在同一个分片（无论是主分片还是副本）的多个副本
+- Master 节点故障时，Master 候选节点接替其角色
+- 只有主分片（或无分片索引的整个索引）可被更新，更新内容会同步到副本分片
+- ES 采用两阶段提交（two-phase commit）机制同步副本数据
+- 副本分片可处理查询（只读请求），以提高查询并发性能
+
+- Master 节点	负责管理集群的元数据，比如创建/删除索引、分片分配等。
+- Data 节点	存储实际的数据分片，负责 CRUD 操作和搜索查询等。
+
+- ✅ 节点可以兼任多个角色，比如同时是 master-eligible 和 data node。
+
+
+## CouchDB vs PostgreSQL vs ElasticSearch 比较
+
+- ElasticSearch 限制对索引的写请求只能由一个节点处理（即主分片所在节点），而 CouchDB 中的每个节点都可以接受写请求。
+- ElasticSearch 通过选举机制确定新的 Master 节点以应对 Master 节点故障，且可能因达不到最小 Master 候选节点数（法定人数，quorum）而停止接受写请求。相比之下，CouchDB 没有选举机制，即使一个或多个节点故障也继续运行。
+- PostgreSQL 中某个节点故障会阻碍整个集群的正常工作，导致部分数据无法访问。
+- 这些差异源于它们对一个无法完全解决的问题的不同处理方式——这个问题由 Brewer 的 CAP 定理定义。
+
+---
+
+## CAP定理：一致性（Consistency）、可用性（Availability）、分区容忍性（Partition-Tolerance）
+
+- **一致性（Consistency）**  consistency:每个client从每个node获取到相同的答案
+  - 每个客户端从集群的所有节点收到的响应都是相同的答案。
+
+- **可用性（Availability）**   availability：每个客户端能从每个节点获得相应
+  - 每个客户端能从集群的每个节点收到响应（答案不一定相同）。
+
+- **分区容忍性（Partition-Tolerance）**  partition-tolerance 一个或多个节点不工作时依然能够正常运行
+  - 当一个或多个节点无法与集群其余部分通信时，集群仍能继续运行。
+
+## 关于 Brewer 的 CAP 定理的更多内容
+
+- 虽然该定理表明一致性（Consistency）、可用性（Availability）和分区容忍性（Partition-Tolerance）三者是对称的，但只有在发生网络分区（Partition）时，一致性和可用性才会发生冲突。
+- “硬”网络分区（如节点崩溃）可能较少见，但“软”网络分区（如节点响应变慢）却并不少见。  
+  - 例如，ElasticSearch 将主节点延迟超过 500 毫秒视为该节点崩溃，需要进行选举。
+- 网络分区可能会对整个集群产生影响，比如分布式连接操作只有当所有子查询都返回结果时才算完成。
+- 传统数据库管理系统（DBMS）架构对网络分区关注较少，因为所有数据通常集中在少数高质量的同地服务器集群中。
+- 随着大量廉价服务器在商业云环境中共享多租户使用，硬件故障率和延迟时间显著增加。
+- CAP 定理促使我们在系统设计时必须权衡不同选项之间的取舍。
+
+
+## 一致性与可用性的协议：两阶段提交（Two-phase Commit）协议 consistance and availability
+
+这是关系型数据库管理系统（以及一定程度上的 ElasticSearch）常用的算法，通过以下方式保证一致性：
+
+- 锁定事务范围内的数据  **lock data in the transcation scope事务**
+- 在写前日志（write-ahead logs）上执行事务  **performing transcations on write-ahead logs**
+- 只有当集群中所有节点都完成事务时才提交（commit）  **commit when all nodes perform the transcations**
+- 当检测到网络分区时回滚事务（rollback）  **rollback when partition is detected**
+
+这种方式带来的结果是：
+
+- 性能下降（因数据锁定）  reduce performance
+- 网络分区时不可用（无可用性）  no available when partition
+- 一致性得以强制保证（所有数据库保持一致状态）  strong consistance
+
+因此，**两阶段提交适合节点同地集群，分布式集群则不太适用**。
+
+---
+
+## 一致性与分区容忍性：Paxos 算法 consistance and partition-tolerance
+
+- 这一类算法基于共识机制，既保证分区容忍性，也保证一致性。
+- 在 Paxos 中，每个节点充当提议者（proposer）或接受者（accepter）：  
+  - 提议者提出一个带时间戳的值  propose with a timestamp
+  - 接受者可以接受或拒绝（例如，若收到更近期的值则拒绝旧值）  accepter accept or refuse
+- 当提议者收到足够多的接受（达到法定人数 quorum）后，会向接受者发送确认信息，确认达成共识的值。  
+- Paxos 集群能够从网络分区中恢复并保持一致性，但分区中较小的部分（不在法定人数内）不会响应客户端，导致可用性降低。  
+- Raft 是一个类似但更简单的算法，解决同样问题。
+
+---
+
+## 可用性与分区容忍性：多版本并发控制（MVCC）availability and portion-Tolerance
+
+- MVCC 确保集群中每个节点总能接受请求（可用性），并通过版本修订机制支持分区后数据恢复（数据不会被替换，只是赋予新的版本号）。  
+- 在 MVCC 中，允许并发更新且无分布式锁（乐观锁仅锁定本地对象副本），因为更新有不同的版本号，最后完成的事务拥有更高版本号，被视为最新值。  
+- 若网络分区导致两个节点收到相同版本号的并发请求，两个请求都会被接受，分区恢复后会出现冲突，需人工或程序解决（CouchDB 会返回所有冲突列表，留给应用处理）。这类似于 Git 这样的版本控制系统。
+- No global locks
+- every wirte operation will construct a new revision
+- will be data conflict when there are more than one version
+
+---
+
+## CouchDB vs PostgreSQL vs ElasticSearch - 复盘
+
+- **CouchDB 使用 MVCC**，因而具备高可用性，即使发生网络分区也能保持可用，但可能牺牲一致性。  
+- **ElasticSearch 使用两阶段提交（复制主分片到副本分片）和类似 Paxos 的选举机制**，保证一致性，但发生网络分区时不可用。  
+  - 为保证文档更新顺序，事务请求必须包含序列号和主分片编号（primary term）。  
+- **PostgreSQL 联邦数据库采用两阶段提交**，因此不容忍网络分区。
+
+---
+
+## 为什么大数据使用面向文档的数据库管理系统？document-oriented
+
+虽然关系型数据库管理系统在确保**一致性和可用性**方面表现优异，但其核心的规范化设计导致数据细粒度较高，这使得它们在分区容忍性方面不如粗粒度数据灵活。
+**fine-grained细粒度**
+示例：
+
+- 关系型数据库中的典型联系人数据库可能包含多个表：人员表、电话表、邮箱表和地址表，这些表相互关联。  
+- 而面向文档的数据库则通常只需一个文档类型，电话号、邮箱地址等作为数组嵌套在同一文档内。
+
+## 分片（Sharding）
+
+- 分片是对数据库进行“水平”分区的过程，即将数据库的行（或文档）划分成多个子集，每个子集称为一个 **分片（shard）**，并存储在不同的服务器上。
+- 分片数据库的主要优势在于：
+  - 通过将计算负载分散到多个节点上提升性能  
+  - 更容易在添加新节点时移动数据文件
+- 分片机制允许数据库的总体容量超出任何单个节点的持久存储能力。
+- 常见的分片策略包括：
+  - **哈希分片（Hash sharding）**：将数据行均匀分布在集群中
+  - **范围分片（Range sharding）**：将相似数据（如来自同一地区的社交媒体帖子）存储在同一分片上
+
+---
+
+## 复制（Replication）与分片（Sharding）
+
+- **复制** 是将同一数据行（或文档）存储在多个节点上的过程，目的是使数据库具备容错能力。
+- **分片** 是将数据分割成不同的“块”（shard），分布存储。
+- 复制与分片可以结合使用：
+  - 同时最大化可用性（Availability）
+  - 并维持一定程度的数据安全性（如故障恢复）
+
+## ElasticSearch 擅长的场景
+
+- **全文搜索**  full-text search
+- **按时间检索数据**，例如计算机日志  search by time-based data
+- **存储非结构化数据**  store unstructer data
+- **存储变动不频繁的数据**，甚至是静态数据  store data are not  change frequently
+- **存储关联数据**（如发票和客户）——不过此时关系型数据库会是更好的选择，因为：
+  - ElasticSearch 实际上不支持真正的文档间连接（join），只能通过父子关系实现
+  - 即使可以通过多个字段或多层嵌套字段进行文档间连接，效率也很低
+
+---
+
+## ElasticSearch 不太适合的场景
+    - store data link to another(doesnt not really suppport joins)
+- **需要支持事务的场景**：例如需要“要么全部更新，要么全部回滚”的多文档事务
+  - ElasticSearch 仅支持单个文档级别的事务安全 Only supports transation of one doc
+- **面向多维分析的数据仓库**：此类任务更适合专门的 OLAP 引擎 data analyse in multify angles/demintions
+- **数据频繁变更的场景**：data change frequently
+  - ElasticSearch 中的文档不会直接删除或更新
+  - 每次更新都会将旧版本标记为已删除，并添加一个新版本文档
+  - 这会导致索引文件体积迅速膨胀
+
+## ElasticSearch 核心概念
+
+- **Index（索引）**：相当于关系型数据库中的一个“数据库”  
+- **Document（文档）**：ElasticSearch 索引中的数据项，相当于关系型数据库中的“行”，以 JSON 格式表示  
+- **Data stream（数据流）**：一组遵循相同命名模式的索引，通常用于日志轮换或其他时间序列数据  
+  - 例如命名模式为 `nginx-*`，星号部分包含收集日志的日期  
+- **Shard（分片）**：索引的水平分区  
+- **Replica（副本）**：某个分片的副本数量  
+  - 两个副本表示总共有三份文档副本：1 个主分片（primary shard）+ 2 个副本分片（replica shards）  
+- **Node（节点）**：ElasticSearch 的一个运行实例  
+- **Cluster（集群）**：多个节点协同管理相同的索引  
+- **Mapping（映射）**：将 JSON 文档中的字段映射为特定的数据类型和索引方法的模式（类似数据库 schema）
+
+---
+
+## ElasticSearch 组件
+
+- **ElasticSearch**：核心组件，负责存储和搜索文档  
+- **FileBeat**：监听文件（通常是日志文件）的更新，并将更新加载到索引中  
+- **MetricBeat**：监控系统状态，将指标数据存储到索引中  
+- **LogStash**：将 FileBeat 和 MetricBeat 等数据源采集的数据进行转换，然后存入 ElasticSearch 索引  
+- **Kibana**：基于网页的用户界面，支持查询与管理 ElasticSearch 集群  
+
+---
+
+## 其他 Elastic 组件
+
+- **FunctionBeat**：监控无服务器环境（如 AWS Lambda）活动并将结果存储到索引中  
+- **HeartBeat**：检测服务的运行状态并将结果存储到索引中  
+- **Observability（可观测性）**：监控系统指标、分析并生成洞察信息  
+- **Security（安全性）**：类似于 Observability，但针对的是系统安全性  
+- **其他更多组件**：Elastic Stack 提供丰富的扩展组件以支持不同数据源与场景
+
+## 节点角色（Node roles）
+
+- 集群中的每个节点都会被分配一个或多个角色  
+- 角色种类很多（如：master、data、transform、ingest、ml 等），但**唯一必须的角色**是：`master` 和 `data`  
+- **Master 节点**负责协调整个集群的操作，例如：
+  - 决定分片的分配位置
+  - 跟踪节点健康状况
+  - 创建索引等
+- 集群中可以有多个 master 节点，但**任意时刻只能有一个活跃的 master 节点**，其余为“候选 master 节点”（master-eligible）
+- **Data 节点**：如果不是 master-eligible，它只负责管理数据，**不能参与 master 选举**
+- 当 master 节点故障时，其它 master 节点会举行选举以选出新的 master  
+- 被删除或崩溃节点上的主分片（primary shard）会被其余节点上的副本分片（replica shard）接替，升级为主分片
+
+---
+
+## ElasticSearch 集群扩展（Scaling）
+
+- 扩展方式有两种：
+  - **纵向扩展（Vertical）**：使用更强大的机器节点，并迁移数据过去
+  - **横向扩展（Horizontal）**：新增节点到集群
+- 当新数据节点加入集群后，部分分片会迁移到新节点，以重新平衡负载
+- 当移除数据节点时，该节点上的主分片必须被替换，副本分片将被提升为新的主分片
+
+---
+
+## ElasticSearch 集群状态（Cluster Status）
+
+- **绿色（Green）**：有足够的节点容纳所有主分片和副本分片，状态良好
+- **黄色（Yellow）**：分片无法合理分配（例如主分片和副本不能在同一节点），系统仍可正常工作，但无法保证冗余
+- **红色（Red）**：主分片数量超过了当前运行节点数，某些数据可能无法访问
+
+---
+
+## ElasticSearch 索引状态与分片（Index & Shard）
+
+- ElasticSearch 默认使用 **基于文档 ID 的哈希分片**，以实现各分片中文档数量大致相同
+- 每个索引可以设置不同数量的主分片与副本分片
+- 可在创建文档时指定“路由值（routing value）”来将文档写入特定分片，实现**范围分片**
+- 查询时，每个分片使用一个线程进行处理（但一个分片上也可同时进行多个查询）
+- 分片越大，查询越慢；但每个分片会消耗资源，因此需合理权衡
+- **经验法则**：一个分片推荐存放约 `2 亿个文档`，或 `10GB~50GB` 的数据量
+- 一般来说，**多分片优于少分片**，因为主分片数限制了一个索引可以使用的最大节点数
+- 数据库容量通常比预期增长得更快，因此建议分片留有余量
+
+---
+
+## ElasticSearch 分片生命周期（Shard Lifecycle）
+
+- 有些数据是时间敏感且快速增长的，因此可以在数据过老或过大时将其删除
+- ElasticSearch 中索引可以配置“生命周期策略（ILM）”，主要阶段包括：
+  - **Hot**：活跃阶段，用于读写
+  - **Warm**：只读但仍被频繁访问
+  - **Cold**：几乎不访问，只保留
+  - **Frozen**：极低访问频率，延迟高
+  - **Delete**：被删除
+- 可以将不同阶段的索引分配到不同角色的节点（如：data_hot, data_cold）
+- 简单设置中，可以让数据流（data stream）在达到特定大小或过了一定天数后“滚动（rollover）”，并最终删除
+
+  例如：
+  - 数据流 `nginx-*` 的生命周期策略为：
+    - 10 天后进入 warm 状态
+    - 30 天后被删除
+  - 所以：
+    - 第 10 天：可能存在两个索引，如 `nginx-2024-01-01`, `nginx-2024-01-11`
+    - 第 20 天：存在三个索引
+    - 第 30 天：最旧的索引被删除，仍保持三个索引
+
+
+
+
+
+
 ### past exam
 - > [2013 Q6] A) Explain what is meant by the following security terms:
     - > single sign-on [1]
@@ -4607,3 +5302,447 @@ Terminology
         - above
     - > b. Why isn’t Shibboleth used to access Cloud-based systems more generally? [3]
         - above
+
+
+✅ [2013 Q6] A) 解释以下安全术语的含义：
+Single sign-on（单点登录） [1]
+指的是你只需认证一次，身份提供者（Identity Provider, IdP）就可以让你访问一组多个不同的服务，这些服务可能托管在不同的地方。
+
+Public key infrastructures（公钥基础设施） [1]
+云计算正是基于这种机制。你拥有一对公钥和私钥，公钥可以被任何人持有，而私钥只有你自己持有。证书用来建立公钥和私钥之间的绑定关系，证书由**证书认证机构（CA）**签发。如果你想获取证书，就必须证明你的身份。
+
+Certification authority（证书认证机构） [1]
+负责签发证书的权威机构。
+
+Registration authority（注册认证机构） [1]
+是机构中的具体人员，负责验证某人的身份。
+
+Identity provider（IdP，身份提供者） [1]
+是负责认证的系统，也就是你证明身份的地方。
+举例：当你尝试登录 AURIN 时，会被重定向到墨尔本大学的认证系统，在那里你需要提供你的身份信息。
+
+✅ [2013 Q6] B) 讨论在云环境中支持细粒度安全所面临的挑战。你可以参考上面 A 部分中的术语。[5 分]
+云中如何实现身份认证：
+比如：细粒度访问控制（授权）和审计。
+仍然存在的一个问题是保密性——你将数据放在服务器上，但你并不知道服务器在哪里。
+
+云中的细粒度安全做得并不好：
+我们对认证有一定的掌握，但构建一个细粒度的访问控制系统并不是云服务提供商会为你自动构建的，因此你通常需要自己实现。
+
+关键安全元素包括：
+
+认证（Authentication）
+
+授权（Authorization）
+
+记账/审计（Accounting/Auditing）
+
+保密性（Confidentiality）
+
+信任（Trust）
+
+✅ [2015 Q5] A) 云安全交付中存在许多挑战。请描述当前在开发与部署安全导向的云服务中面临的一些技术和非技术问题。[4 分]
+技术问题：
+
+授权机制尚不完善
+
+信任：你需要相信云提供商能安全地存储你的数据
+
+API：可能存在安全漏洞
+
+单点登录（SSO）：
+
+登录一次即可访问许多资源，可能由不同提供商提供
+
+类似于 Grid 或 Shibboleth 模型
+
+目前在基于云的 IaaS 上还未很好解决
+
+责任落在非云开发者身上，云开发者无法协助
+
+证书认证（CA）相关问题：
+
+没有统一的 CA 管理整个云
+
+颁发证书需本地注册机构验证身份（如护照、学生证）
+
+吊销机制依赖证书吊销列表（CRL）
+
+需要长期存储和归档证书数据
+
+非技术问题：
+
+政府监管问题：如政府不允许将医疗数据存储在 AWS 上，因为备份可能在海外
+
+敏感性问题：特定行业数据敏感性高
+
+政策限制
+
+责任归属问题（Liability）：使用合同声明风险
+
+许可问题（Licensing）：
+
+云交付模型带来的挑战（任务在哪运行）
+
+许可方式复杂：按用户、按服务器、按组织、浮动许可、绑定机器等
+
+✅ [2014 Q2] A) b. 说明支持云互操作性时面临的一些实际挑战？[2 分]
+安全性问题：
+你没有单点登录功能——也就是说，无法只登录一次就访问多个云服务。
+
+API 问题：
+云提供商（尤其是公共云）往往希望将你锁定在他们的平台上。因为他们的商业模式和费用结构都不一样。
+
+✅ [2014 Q6] A) Internet2 Shibboleth 技术在 Australia Access Federation 中支持联合身份认证和单点登录。
+a. 解释斜体词语的含义 [2 分]：
+联合身份认证（Federated Authentication）：
+指你在访问一个资源时，是在另一个地方验证身份。
+
+单点登录（SSO）：
+是指你只需认证一次，IdP 就可以让你访问多个不同服务。
+
+b. 解释信任（Trust）和公钥基础设施（PKI）在支持 Shibboleth 模型中的作用 [2 分]：
+信任（Trust）：
+是安全系统的核心。Shibboleth 的基础是各组织之间的相互信任，彼此信任对方能正确认证用户身份。
+
+公钥基础设施（PKI）：
+所有有关你身份的信息都被数字签名。你不会信任未验证身份的来源，只有在联邦内的组织才具有签名权限，使用其私钥签名信息，其他组织可用其公钥验证身份。
+
+举例：我来自 unimelb，我用自己的密钥签名此消息，你能用我的公钥验证我确实来自 unimelb。
+
+c. 试分析 Shibboleth 安全模型的优点与缺点 [4 分]：
+优点：
+
+使用灵活，支持单点登录
+
+用户体验简单，验证一次即可访问多个服务
+
+缺点：
+
+协议是静态的：
+
+所有身份信息是预先协商的（如：他是工作人员）。若后来加入新项目，旧信息无法支持
+
+不够灵活，不具备动态扩展能力
+
+d. 为什么 Shibboleth 没被广泛用于访问基于云的系统？[2 分]
+原因包括：
+
+涉及信任问题：不同云提供商需要不同的身份验证信息
+
+例如：Amazon 需要你的信用卡信息，而 unimelb 只需要学生信息
+
+静态联邦机制：不灵活
+
+没有统一的证书认证机构（CA）
+
+✅ [2015 Q5] B) Internet2 Shibboleth 技术支持联合身份认证
+a. 解释该术语并分析 Shibboleth 安全模型的优缺点 [3 分]
+同上所述（联合身份认证与优缺点）
+
+b. 为什么 Shibboleth 没有被广泛用于访问基于云的系统？[3 分]
+同上所述（信任机制、静态机制、无统一 CA）
+
+
+
+
+
+## 虚拟化的动机 Virtualisation
+
+- **服务器整合（Server Consolidation）**
+  - 提高资源利用率
+  - 降低能源消耗
+
+- **可以按需创建个人虚拟机**
+  - 无需购买硬件
+  - 支持公有云计算（Public Cloud Computing）
+
+- **安全性 / 隔离性（Security / Isolation）**
+  - 在单一机器上与多个用户共享资源
+
+- **硬件无关性（Hardware Independence）**
+  - 可以迁移到不同的硬件平台
+
+
+## 特权指令（Privileged Instructions）
+
+- 如果处理器处于用户模式（user mode），执行这些指令会产生陷阱（trap）
+- 如果处于内核模式（kernel mode），则不会产生陷阱
+
+## 敏感指令（Sensitive Instructions）
+
+- 其行为依赖于硬件的模式或配置
+- 在用户模式和内核模式下，表现不同
+- 例如：POPF 指令（用于中断标志的处理）
+
+## 无害指令（Innocuous Instructions）
+
+- 既不是特权指令，也不是敏感指令
+- 执行诸如读取数据、数字相加等操作
+
+
+
+## 虚拟机监控器（VMM）需要支持的功能：
+
+- **去特权化（De-privileging）**
+  - VMM 模拟特权指令对系统/硬件资源的影响，这些指令的执行会陷入（trap）到 VMM
+  - 又称为“陷阱并模拟”（trap-and-emulate）
+  - 通常通过将 Guest OS 运行在比 VMM 低的硬件优先级上实现
+
+- **主结构和影子结构（Primary/Shadow Structures）**
+  - VMM 维护关键结构的“影子”副本，这些结构的“主”版本由 Guest OS 操作，例如内存页表
+  - 需要主副本确保 Guest OS 能看到正确的版本（后续会详细说明）
+
+- **内存访问跟踪（Memory Traces）**
+  - 控制对内存的访问，保证影子结构和主结构保持一致
+  - 常用策略是对主副本设置写保护，使得可能引起页面错误（page fault）的更新操作能够被捕获、解释并处理
+  - 这样可以防止某个应用或代码崩溃你正在使用的服务器！
+
+
+## 全虚拟化（Full Virtualisation）
+
+- 允许未修改的来宾操作系统（Guest OS）在隔离环境中运行，通过模拟完整硬件实现（例如 VMWare）
+- 来宾操作系统完全不知道自己并非运行在真实物理机上
+
+### 与之对比
+
+## 半虚拟化（Para-virtualisation）
+
+- VMM/Hypervisor 向来宾操作系统暴露特殊接口以提高性能
+- 需要修改或使来宾操作系统具备虚拟化感知能力（例如 Xen）
+- 可以优化系统使用该接口，因为不是所有指令都需要被捕获和处理
+
+---
+
+## 全虚拟化的优缺点
+
+### 优点
+
+- 来宾操作系统不知道自己在虚拟机内执行
+- 来宾操作系统无需修改
+- 不需要硬件或操作系统的协助
+- 可以运行旧版操作系统（legacy OS）
+
+### 缺点
+
+- 性能可能不如半虚拟化高效 low performance
+
+---
+
+## 半虚拟化的优缺点
+
+### 优点
+
+- 虚拟化开销较低，性能更好，例如 Xen
+
+### 缺点
+
+- 需要修改来宾操作系统
+- 不能运行任意操作系统
+- 移植性较差
+- 兼容性较低
+
+---
+
+## 虚拟机监控器的实现方式（续）
+
+### 硬件辅助虚拟化（Hardware-assisted Virtualisation）
+
+- 硬件提供架构支持来运行 Hypervisor（例如 KVM）
+- 许多新处理器通常具备此功能
+- 要求所有敏感指令都能被捕获（trappable）
+
+### 与之对比
+
+### 二进制翻译（Binary Translation）
+
+- 通过扫描来宾指令流，替换敏感指令为模拟代码来实现陷阱和执行（例如 VMWare）
+- 不需要硬件支持，但实现难度较大
+- 指令集间通常不存在 1:1 的映射关系
+
+---
+
+## 硬件辅助虚拟化
+
+### 优点
+
+- 性能较好
+- 实现更简单
+- 高级实现支持硬件辅助的 DMA、内存虚拟化等功能
+
+### 缺点
+
+- 需要硬件支持
+
+---
+
+## 二进制翻译
+
+### 优点
+
+- 来宾操作系统无需修改
+- 不需要硬件或操作系统协助
+- 可以运行旧版操作系统
+
+### 缺点
+
+- 开销较大 overheads
+- 实现复杂
+- 需要“即时”替换指令
+- 需要库支持辅助实现，例如 vCUDA
+
+| 名称    | 关键点                 |
+| ----- | ------------------- |
+| 全虚拟化  | 不改 OS，完全模拟，性能一般     |
+| 半虚拟化  | 改 OS，不模拟，性能高 ，hard to move on different os       |
+| 硬件辅助  | 不改 OS，靠 CPU 帮忙，性能最好 |
+| 二进制翻译 | 不改 OS，翻译指令，最慢 ,费用高,complicated     |
+
+### Hypervisor（虚拟机管理器,又叫VMM）
+
+### 裸机型虚拟机监控器（Bare Metal Hypervisor）run on hardware
+
+- VMM 直接运行在物理硬件上（例如：VMWare ESX Server）
+- 启动时直接运行在真实物理机器上
+- VMM 需要支持设备驱动和硬件管理
+
+### 托管型虚拟化（Hosted Virtualisation）run on another os
+
+- VMM 运行在另一个操作系统之上（例如：VMWare Workstation）
+
+## 操作系统级虚拟化（Operating System Level Virtualisation）
+
+- 实现轻量级虚拟机（容器，Containers）lightweight VM
+- 与传统系统级虚拟化不同，操作系统创建“迷你容器” docker
+  - 对于许多使用场景来说，**共享一个通用的操作系统就足够了**
+  - 无法在 Linux 上运行 Windows，但很多场合并不需要这么做
+- 示例：LXC、Docker、OpenVZ、FreeBSD Jails
+- 可与云端 Hypervisor 结合使用
+
+### 优点
+
+- 更加轻量 lightweight
+- 更快的启动和运行速度 faster
+- 在同一台硬件上可运行更多虚拟机 more than one VM on one
+- 可以将应用程序及其所有依赖打包成容器
+  - 更贴近应用开发流程
+
+### 缺点
+
+- 只能运行为同一操作系统设计的应用程序 only run apps designed for one os
+- 不能托管不同的来宾操作系统
+- 只能使用本地文件系统 use local file system
+- 与其他容器共享相同的系统资源 share resources with other VM
+  
+## 内存虚拟化（Memory Virtualisation）
+
+- 传统上，页表（Page Tables）存储逻辑页号（Logical Page Number）到物理页号（Physical Page Number）的映射
+  - 看起来比实际拥有的内存更多
+
+## 影子页表（Shadow Page Tables）
+
+- VMM 维护与来宾页表同步的“影子页表”
+- 带来额外的管理开销
+- 硬件负责从来宾地址到物理地址、再到机器地址的双重地址转换
+
+- **多个虚拟机在同一系统上工作，靠的是特权指令拦截** **priviledge instruction interception** and virtual memory makes each VMthought hey has their own memory.有些计算机也支持hardware virtualization, easier to handle instructions and memory virtualization
+
+
+## OpenStack 与 AWS 比较
+
+### OpenStack
+
+- 由社区驱动、基于模块组件的架构
+- MRC（墨尔本研究云）仅提供 OpenStack 部分服务：
+  - **不支持 Designate**（DNS 即服务）
+  - **不支持 HEAT 的自动扩缩功能**
+  - ……（还有其他服务缺失）
+- 某些服务虽在 MRC 中可用，但你所在的项目无法使用：
+  - **Trove**（关系数据库即服务）
+  - **LBaaS**（负载均衡即服务）
+
+
+## AWS 服务概览
+
+### EC2 – 弹性云计算（Elastic Cloud Computing）
+
+- 实例（Instance）
+- 安全组（Security Group）
+- 弹性 IP（Elastic IP 或 Floating IP）
+- 弹性负载均衡器（Elastic Load Balancer）
+- 安全连接 EC2 实例的方式：
+  - 使用 Web 界面的 Session Manager
+  - 使用命令行（CLI）通过 SSH 调用 Session Manager
+
+---
+
+### 数据库服务（Database Services）
+
+- **Amazon RDS**
+  - 托管的关系型数据库服务
+  - 支持：MySQL、PostgreSQL、MariaDB、Oracle、MS SQL
+
+- **Amazon DocumentDB**
+  - 可扩展、高可用、完全托管的 MongoDB 数据库服务
+  - 兼容 MongoDB 开源 API（版本 3.6、4.0 和 5.0）
+  - 是否选择 MongoDB Atlas（另一个托管 MongoDB 服务）？
+
+- **Amazon OpenSearch Services**（原 Amazon Elasticsearch Services）
+  - 全托管、自动部署、补丁、故障恢复、备份和监控
+  - 支持扩展性并可与 AWS 其他服务集成（如 Lambda、S3）
+
+---
+
+### S3 – 简单存储服务（Simple Storage Service）
+
+- 面向对象的存储服务，提供业界领先的可扩展性、数据可用性、安全性与性能
+- 用于存储任意类型的数据，适用于任何用途
+- 可通过 Web 界面、CLI、API 及第三方工具上传和下载数据
+- 可使用 S3 桶托管静态网站
+- 支持数据版本管理与生命周期策略配置
+
+---
+
+## AWS 系统管理服务（System Manager）
+
+### Fleet Manager
+
+- 远程管理节点
+- 查看节点的运行状况与性能状态，收集系统数据
+
+### Session Manager
+
+- 提供无需打开入站端口的安全可审计的节点管理方式
+- 可通过浏览器交互式 shell 或 AWS CLI 使用
+
+### Run Command
+
+- 自动化执行常见的管理任务
+- 实现大规模的一次性配置更改
+
+### Patch Manager
+
+- 自动修补托管节点的操作系统与应用程序补丁
+
+---
+
+## AWS 安全服务
+
+### WAF – Web 应用防火墙（Web Application Firewall）
+
+- 监控发送到 API 网关、CloudFront 分发网络或应用负载均衡器的 Web 请求
+- 根据指定条件（如来源 IP 地址）保护资源免受恶意访问
+
+---
+
+## AWS 容器编排服务（Container Orchestration）
+
+### ECS – 弹性容器服务
+
+- 可运行在 EC2 上
+- 可运行在 Fargate 上（无服务器化，Serverless！）
+
+### EKS – 弹性 Kubernetes 服务
+
+- 可运行在 EC2 上
+- 可运行在 Fargate 上（无服务器化，Serverless！）
